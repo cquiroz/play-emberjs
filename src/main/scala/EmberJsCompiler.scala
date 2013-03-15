@@ -12,7 +12,7 @@ import play.api._
 import scalaz._
 import Scalaz._
 
-class EmberCompiler(ember: String, handlebars: String) {
+class EmberJsCompiler(ember: String, handlebars: String) {
 
   import org.mozilla.javascript._
   import org.mozilla.javascript.tools.shell._

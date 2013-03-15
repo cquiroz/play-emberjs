@@ -9,11 +9,11 @@ object EmberJsPlugin extends Plugin {
     val emberJsOptions = SettingKey[Seq[String]]("play-emberjs-options")
     val emberJsWatcher = AssetsCompiler("emberjs",
         { file => (file ** "*.handlebars")},
-        sassEntryPoints,
+        emberJsEntryPoints,
         { (name, min) => "javascripts/" + name + ".pre" + (if (min) ".min.js" else ".js")
         },
         { (file, options) => EmberJsCompiler.compile(file, options) },
-        sassOptions
+        emberJsOptions
     )
 
     val emberJsSettings = Seq(
