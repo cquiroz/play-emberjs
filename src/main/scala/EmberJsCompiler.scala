@@ -1,16 +1,14 @@
 package com.ketalo
 
-import sbt.PlayExceptions.AssetCompilationException
-import java.io.File
-import scala.sys.process._
-import sbt.IO
-import io.Source._
-
 import java.io._
 import play.api._
 
 import scalaz._
 import Scalaz._
+
+object EmberJsCompiler {
+  def compile(root: File, options: Seq[String]): (String, Option[String], Seq[File]) = new EmberJsCompiler("", "").compile(root, options)
+}
 
 class EmberJsCompiler(ember: String, handlebars: String) {
 
@@ -69,12 +67,13 @@ class EmberJsCompiler(ember: String, handlebars: String) {
 
     (source: File) => {
       val handlebarsCode = Path(source).string().replace("\r", "")
-      Context.call(null, precompileFunction, scope, scope, Array(handlebarsCode)).asInstanceOf[String]
+      val jsSource = Context.call(null, precompileFunction, scope, scope, Array(handlebarsCode)).asInstanceOf[String]
+      (jsSource, None, Seq.empty)
     }
   }
 
   def compileDir(root: File, options: Seq[String]): (String, Seq[File]) = {
-    println("compile dir")
+    println("compile dir " + options)
     val dependencies = Seq.newBuilder[File]
 
     val output = new StringBuilder
@@ -105,7 +104,7 @@ class EmberJsCompiler(ember: String, handlebars: String) {
     (output.toString, dependencies.result)
   }
 
-  private def compile(source: File, options: Seq[String]): String = {
+  private def compile(source: File, options: Seq[String]): (String, Option[String], Seq[File]) = {
     try {
       compiler(source)
     } catch {
