@@ -21,4 +21,8 @@ object EmberJsPlugin extends Plugin {
         emberJsOptions := Seq.empty[String],
         resourceGenerators in Compile <+= emberJsWatcher
     )
+
+  println("plugin")
+  override def settings: Seq[Setting[_]] = super.settings ++ emberJsSettings
+
 }
