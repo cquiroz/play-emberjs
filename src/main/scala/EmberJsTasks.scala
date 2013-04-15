@@ -1,16 +1,19 @@
 package com.ketalo
 
-import java.io._
-import play.api._
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStreamReader
+import org.apache.commons.io.FilenameUtils
+import org.mozilla.javascript.tools.shell.Global
+import org.mozilla.javascript.Context
+import org.mozilla.javascript.JavaScriptException
+import org.mozilla.javascript.Scriptable
+import org.mozilla.javascript.ScriptableObject
 
-import scalaz._
-import Scalaz._
+import sbt._
+import PlayProject._
 
-object EmberJsCompiler {
-  def compile(root: File, options: Seq[String]): (String, Option[String], Seq[File]) = new EmberJsCompiler("ember-1.0.0-pre.2.for-rhino", "handlebars-1.0.rc.1").compileDir(root, options)
-}
-
-class EmberJsCompiler(ember: String, handlebars: String) {
+trait EmberJsTasks extends EmberJsKeys {
 
   import org.mozilla.javascript._
   import org.mozilla.javascript.tools.shell._
@@ -20,7 +23,7 @@ class EmberJsCompiler(ember: String, handlebars: String) {
   /**
    * find a file with the given name in the current directory or any subdirectory
    */
-  private def findFile(name: String): Option[File] = {
+  /*private def findFile(name: String): Option[File] = {
     def findIn(dir: File): Option[File] = {
       for (file <- dir.listFiles) {
         if (file.isDirectory) {
@@ -152,15 +155,110 @@ class EmberJsCompiler(ember: String, handlebars: String) {
           source,
           None)
     }
+
+  }*/
+
+  def compile(name: String, source: String): Either[(String, Int, Int), String] = {
+
+    import org.mozilla.javascript._
+    import org.mozilla.javascript.tools.shell._
+
+    import com.ketalo.EmberJsKeys
+
+    import scala.collection.JavaConversions._
+
+    import java.io._
+
+    val ctx = Context.enter
+    val global = new Global
+    global.init(ctx)
+    val scope = ctx.initStandardObjects(global)
+
+    ctx.evaluateReader(
+      scope,
+      new InputStreamReader(this.getClass.getClassLoader.getResource("dust-full-0.6.0.js").openConnection().getInputStream()),
+      "dust.js",
+      1, null)
+
+    ScriptableObject.putProperty(scope, "rawSource", source)
+    ScriptableObject.putProperty(scope, "name", name)
+
+    try {
+      Right(ctx.evaluateString(scope, "(dust.compile(rawSource, name))", "JDustCompiler", 0, null).toString)
+    } catch {
+      case e: JavaScriptException => {
+        val jsError = e.getValue.asInstanceOf[Scriptable]
+        val message = ScriptableObject.getProperty(jsError, "message").toString
+
+        // dust.js has weird error reporting where the line/column are part of the message, so we have to use a Regex to find them
+        val DustCompileError = ".* At line : (\\d+), column : (\\d+)".r
+
+        message match {
+          case DustCompileError(line, column) => Left(message, line.toInt, column.toInt)
+          case _ => Left(message, 0, 0) // Some other weird error, we have no line/column info now.
+        }
+      }
+    }
+  }
+
+  protected def templateName(sourceFile: String, assetsDir: String): String = {
+    val sourceFileWithForwardSlashes = FilenameUtils.separatorsToUnix(sourceFile)
+    val assetsDirWithForwardSlashes  = FilenameUtils.separatorsToUnix(assetsDir)
+    FilenameUtils.removeExtension(
+      sourceFileWithForwardSlashes.replace(assetsDirWithForwardSlashes + "/", "")
+    )
+  }
+
+  import Keys._
+
+  lazy val EmberJsCompiler = (sourceDirectory in Compile, resourceManaged in Compile, cacheDirectory, emberJsFileRegexFrom, emberJsFileRegexTo, emberJsAssetsDir, emberJsAssetsGlob).map {
+    //p =>
+      (src, resources, cache, fileReplaceRegexp, fileReplaceWith, assetsDir, files) =>
+      //val (src, resources:File, cache:File, fileReplaceRegexp:String, fileReplaceWith:String, assetsDir:File, files:Option[SettingKey[File]]) = p
+      val cacheFile = cache / "dust"
+
+      def naming(name: String) = name.replaceAll(fileReplaceRegexp, fileReplaceWith)
+
+      val currentInfos = files.get.map(f => f -> FileInfo.lastModified(f)).toMap
+
+      val (previousRelation, previousInfo) = Sync.readInfo(cacheFile)(FileInfo.lastModified.format)
+      val previousGeneratedFiles = previousRelation._2s
+
+      if (previousInfo != currentInfos) {
+
+        previousGeneratedFiles.foreach(IO.delete)
+
+        val generated = (files x relativeTo(assetsDir)).flatMap {
+          case (sourceFile, name) => {
+            val msg = compile(templateName(sourceFile.getPath, assetsDir.getPath), IO.read(sourceFile)).left.map {
+              case (msg, line, column) => throw AssetCompilationException(Some(sourceFile),
+                msg,
+                Some(line),
+                Some(column))
+            }.right.get
+
+            val out = new File(resources, "public/" + naming(name))
+            IO.write(out, msg)
+            Seq(sourceFile -> out)
+          }
+        }
+
+        Sync.writeInfo(cacheFile,
+          Relation.empty[java.io.File, java.io.File] ++ generated,
+          currentInfos)(FileInfo.lastModified.format)
+
+        generated.map(_._2).distinct.toList
+      } else {
+        previousGeneratedFiles.toSeq
+      }
   }
 
 }
 
-
-case class CompilationException(message: String, file: File, atLine: Option[Int]) extends PlayException.ExceptionSource(
-  "Compilation error", message) {
+/*case class AssetCompilationExceptio(message: Option[String], atLine: Option[Int]) extends PlayException.ExceptionSource(
+  "Compilation error", ~message) {
   def line = ~atLine
   def position = 0
   def input = scalax.file.Path(file).toString
   def sourceName = file.getAbsolutePath
-}
+}*/
