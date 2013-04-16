@@ -1,8 +1,6 @@
 package com.ketalo
 
-import java.io.File
-import java.io.FileInputStream
-import java.io.InputStreamReader
+import java.io._
 import org.apache.commons.io.FilenameUtils
 import org.mozilla.javascript.tools.shell.Global
 import org.mozilla.javascript.Context
@@ -12,6 +10,11 @@ import org.mozilla.javascript.ScriptableObject
 
 import sbt._
 import PlayProject._
+import scala.Left
+import scala.Right
+import scala.Some
+import sbt.PlayExceptions.AssetCompilationException
+import java.io.File
 
 trait EmberJsTasks extends EmberJsKeys {
 
@@ -158,6 +161,10 @@ trait EmberJsTasks extends EmberJsKeys {
 
   }*/
 
+  private def loadResource(name: String): Option[Reader] = {
+    Option(this.getClass.getClassLoader.getResource(name)).map(_.openConnection().getInputStream).map(s => new InputStreamReader(s))
+  }
+
   def compile(name: String, source: String): Either[(String, Int, Int), String] = {
 
     import org.mozilla.javascript._
@@ -168,23 +175,48 @@ trait EmberJsTasks extends EmberJsKeys {
     import scala.collection.JavaConversions._
 
     import java.io._
-
+    val (ember, handlebars) = ("ember-1.0.0-pre.2.for-rhino", "handlebars-1.0.rc.1")
     val ctx = Context.enter
+    ctx.setLanguageVersion(org.mozilla.javascript.Context.VERSION_1_7)
+    ctx.setOptimizationLevel(9)
+
     val global = new Global
     global.init(ctx)
     val scope = ctx.initStandardObjects(global)
 
-    ctx.evaluateReader(
+        // set up global objects that emulate a browser context
+    // load handlebars
+    val handlebarsFile = loadResource(handlebars + ".js").getOrElse(throw new Exception("handlebars: could not find " + handlebars))
+
+    ctx.evaluateReader(scope, handlebarsFile, handlebars, 1, null)
+    // load handlebars
+    val headlessEmberFile = loadResource("headless-ember.js").getOrElse(throw new Exception("handlebars: could not find " + handlebars))
+
+    ctx.evaluateReader(scope, headlessEmberFile, handlebars, 1, null)
+    // load ember
+    val emberFile = loadResource(ember + ".js").getOrElse(throw new Exception("ember: could not find " + ember))
+
+    ctx.evaluateReader(scope, emberFile, ember, 1, null)
+    val precompileFunction = scope.get("precompileEmberHandlebars", scope).asInstanceOf[Function]
+
+    /*(source: File) => {
+      val handlebarsCode = Path(source).string().replace("\r", "")
+      val jsSource = Context.call(null, precompileFunction, scope, scope, Array(handlebarsCode)).asInstanceOf[String]
+      (jsSource, None, Seq.empty)
+    }*/
+
+    /*ctx.evaluateReader(
       scope,
       new InputStreamReader(this.getClass.getClassLoader.getResource("dust-full-0.6.0.js").openConnection().getInputStream()),
       "dust.js",
-      1, null)
+      1, null)*/
 
-    ScriptableObject.putProperty(scope, "rawSource", source)
+    ScriptableObject.putProperty(scope, "rawSource", source.replace("\r", ""))
     ScriptableObject.putProperty(scope, "name", name)
 
     try {
-      Right(ctx.evaluateString(scope, "(dust.compile(rawSource, name))", "JDustCompiler", 0, null).toString)
+      println(ctx.evaluateString(scope, "(precompileEmberHandlebars(rawSource).toString())", "EmberJsCompiler", 0, null).toString)
+      Right(ctx.evaluateString(scope, "(Ember.Handlebars.precompile(rawSource).toString())", "EmberJsCompiler", 0, null).toString)
     } catch {
       case e: JavaScriptException => {
         val jsError = e.getValue.asInstanceOf[Scriptable]
@@ -212,10 +244,8 @@ trait EmberJsTasks extends EmberJsKeys {
   import Keys._
 
   lazy val EmberJsCompiler = (sourceDirectory in Compile, resourceManaged in Compile, cacheDirectory, emberJsFileRegexFrom, emberJsFileRegexTo, emberJsAssetsDir, emberJsAssetsGlob).map {
-    //p =>
       (src, resources, cache, fileReplaceRegexp, fileReplaceWith, assetsDir, files) =>
-      //val (src, resources:File, cache:File, fileReplaceRegexp:String, fileReplaceWith:String, assetsDir:File, files:Option[SettingKey[File]]) = p
-      val cacheFile = cache / "dust"
+      val cacheFile = cache / "emberjs"
 
       def naming(name: String) = name.replaceAll(fileReplaceRegexp, fileReplaceWith)
 
@@ -224,33 +254,47 @@ trait EmberJsTasks extends EmberJsKeys {
       val (previousRelation, previousInfo) = Sync.readInfo(cacheFile)(FileInfo.lastModified.format)
       val previousGeneratedFiles = previousRelation._2s
 
-      if (previousInfo != currentInfos) {
+      //if (previousInfo != currentInfos) {
 
         previousGeneratedFiles.foreach(IO.delete)
 
-        val generated = (files x relativeTo(assetsDir)).flatMap {
+        val output = new StringBuilder
+        output ++= """(function() {
+          var template = Ember.Handlebars.template,
+              templates = Ember.TEMPLATES = Ember.TEMPLATES || {};
+                 """
+
+        val generated:Seq[(File, File)] = (files x relativeTo(assetsDir)).flatMap {
           case (sourceFile, name) => {
-            val msg = compile(templateName(sourceFile.getPath, assetsDir.getPath), IO.read(sourceFile)).left.map {
+            val jsSource = compile(templateName(sourceFile.getPath, assetsDir.getPath), IO.read(sourceFile)).left.map {
               case (msg, line, column) => throw AssetCompilationException(Some(sourceFile),
                 msg,
                 Some(line),
                 Some(column))
             }.right.get
 
-            val out = new File(resources, "public/" + naming(name))
-            IO.write(out, msg)
+            output ++= "templates['%s'] = template(%s);\n\n".format(name, jsSource)
+
+            val out = new File(resources, "public/javascripts/" + naming(name))
+            IO.write(out, jsSource)
             Seq(sourceFile -> out)
           }
         }
+
+        val global = new File(resources, "public/javascripts/templates.pre.js")
+        output ++= "})();\n"
+        IO.write(global, output.toString)
+        val allTemplates = generated ++ Seq(global -> global)
 
         Sync.writeInfo(cacheFile,
           Relation.empty[java.io.File, java.io.File] ++ generated,
           currentInfos)(FileInfo.lastModified.format)
 
-        generated.map(_._2).distinct.toList
-      } else {
+        allTemplates.foreach(println)
+        allTemplates.map(_._2).distinct.toSeq
+      /*} else {
         previousGeneratedFiles.toSeq
-      }
+      }*/
   }
 
 }
