@@ -26,6 +26,6 @@ object EmberJsPlugin extends Plugin with EmberJsTasks {
     resourceGenerators in Compile <+= EmberJsCompiler
   )
 
-  override def settings: Seq[Setting[_]] = super.settings ++ emberJsSettings
+  override def projectSettings: Seq[Setting[_]] = super.projectSettings ++ emberJsSettings
 
 }
