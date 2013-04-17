@@ -9,8 +9,7 @@ object EmberJsPlugin extends Plugin with EmberJsTasks {
   val emberJsSettings = Seq(
     emberJsAssetsDir <<= (sourceDirectory in Compile)(src => (src / "assets" / "templates")),
     emberJsFileEnding := ".handlebars",
-    emberJsAssetsGlob <<= (emberJsAssetsDir)(assetsDir => {println("GROB " + assetsDir ** "*.handlebars");(assetsDir ** "*.handlebars")}),
-    //emberJsAssetsGlob <<= (emberJsAssetsDir)(assetsDir => (assetsDir / "javascripts" / "templates.pre.js")),
+    emberJsAssetsGlob <<= (emberJsAssetsDir)(assetsDir => (assetsDir ** "*.handlebars")),
     emberJsFileRegexFrom <<= (emberJsFileEnding)(fileEnding => fileEnding),
     emberJsFileRegexTo <<= (emberJsFileEnding)(fileEnding => FilenameUtils.removeExtension(fileEnding) + ".js"),
     resourceGenerators in Compile <+= EmberJsCompiler

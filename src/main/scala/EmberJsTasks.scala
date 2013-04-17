@@ -87,7 +87,6 @@ trait EmberJsTasks extends EmberJsKeys {
 
   lazy val EmberJsCompiler = (sourceDirectory in Compile, resourceManaged in Compile, cacheDirectory, emberJsFileRegexFrom, emberJsFileRegexTo, emberJsAssetsDir, emberJsAssetsGlob).map {
       (src, resources, cache, fileReplaceRegexp, fileReplaceWith, assetsDir, files) =>
-      println(src + " " + assetsDir + " " + files)
       val cacheFile = cache / "emberjs"
 
       def naming(name: String) = name.replaceAll(fileReplaceRegexp, fileReplaceWith)
@@ -97,8 +96,6 @@ trait EmberJsTasks extends EmberJsKeys {
       val (previousRelation, previousInfo) = Sync.readInfo(cacheFile)(FileInfo.lastModified.format)
       val previousGeneratedFiles = previousRelation._2s
 
-      println(previousInfo)
-      println(currentInfos)
 
       if (previousInfo != currentInfos) {
 
