@@ -3,7 +3,6 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
 GET     /pre2                       controllers.Application.pre2
 
 # Map static resources from the /public folder to the /assets URL path
