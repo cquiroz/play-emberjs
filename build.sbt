@@ -6,7 +6,7 @@ sbtPlugin := true
 
 organization := "com.ketalo"
 
-description := "SBT plugin for handling Sass assets in Play 2.1"
+description := "SBT plugin for precompiling Ember.js assets in Play 2.1"
 
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
@@ -42,7 +42,7 @@ pomExtra := (
     </license>
   </licenses>
   <scm>
-    <url>git@github.com:krumpi/play-emberjs.git</url>
+    <url>git://github.com/krumpi/play-emberjs.git</url>
     <connection>scm:git:git@github.com:krumpi/play-emberjs.git</connection>
   </scm>
   <developers>
