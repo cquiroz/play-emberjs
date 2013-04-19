@@ -36,7 +36,7 @@ pomExtra := (
   <url>https://github.com/krumpi/play-emberjs</url>
   <licenses>
     <license>
-      <name>MIT-style</name>
+      <name>BSD-style</name>
       <url>https://github.com/krumpi/play-emberjs/blob/master/LICENSE</url>
       <distribution>repo</distribution>
     </license>
