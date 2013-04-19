@@ -1,10 +1,10 @@
-name := "play-emberjs"
+name := "emberjs"
 
 version := "0.1.0-SNAPSHOT"
 
 sbtPlugin := true
 
-organization := "com.ketalo"
+organization := "com.ketalo.play.plugins"
 
 description := "SBT plugin for precompiling Ember.js assets in Play 2.1"
 
