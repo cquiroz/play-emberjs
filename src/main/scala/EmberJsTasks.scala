@@ -31,7 +31,6 @@ trait EmberJsTasks extends EmberJsKeys {
 
     import scala.collection.JavaConversions._
 
-    import java.io._
     val (ember, handlebars) = ("ember-1.0.0-pre.2.for-rhino", "handlebars-1.0.rc.1")
     val ctx = Context.enter
     ctx.setLanguageVersion(org.mozilla.javascript.Context.VERSION_1_7)
@@ -53,7 +52,6 @@ trait EmberJsTasks extends EmberJsKeys {
     val emberFile = loadResource(ember + ".js").getOrElse(throw new Exception("ember: could not find " + ember))
 
     ctx.evaluateReader(scope, emberFile, ember, 1, null)
-    val precompileFunction = scope.get("precompileEmberHandlebars", scope).asInstanceOf[Function]
 
     ScriptableObject.putProperty(scope, "rawSource", source.replace("\r", ""))
 
@@ -61,16 +59,7 @@ trait EmberJsTasks extends EmberJsKeys {
       Right(ctx.evaluateString(scope, "(Ember.Handlebars.precompile(rawSource).toString())", "EmberJsCompiler", 0, null).toString)
     } catch {
       case e: JavaScriptException => {
-        val jsError = e.getValue.asInstanceOf[Scriptable]
-        val message = ScriptableObject.getProperty(jsError, "message").toString
-
-        // dust.js has weird error reporting where the line/column are part of the message, so we have to use a Regex to find them
-        val DustCompileError = ".* At line : (\\d+), column : (\\d+)".r
-
-        message match {
-          case DustCompileError(line, column) => Left(message, line.toInt, column.toInt)
-          case _ => Left(message, 0, 0) // Some other weird error, we have no line/column info now.
-        }
+        Left(e.details(), e.lineNumber(), 0)
       }
     }
   }
