@@ -88,7 +88,7 @@ trait EmberJsTasks extends EmberJsKeys {
   lazy val EmberJsCompiler = (sourceDirectory in Compile, resourceManaged in Compile, cacheDirectory, emberJsTemplateFile, emberJsFileRegexFrom, emberJsFileRegexTo, emberJsAssetsDir, emberJsAssetsGlob).map {
       (src, resources, cache, templateFile, fileReplaceRegexp, fileReplaceWith, assetsDir, files) =>
       val cacheFile = cache / "emberjs"
-      val global = (resources / "public" / "templates" / "templates.pre.js")
+      val global = resources / "public" / "templates" / templateFile
 
       def naming(name: String) = name.replaceAll(fileReplaceRegexp, fileReplaceWith)
 
@@ -135,7 +135,6 @@ trait EmberJsTasks extends EmberJsKeys {
 
         allTemplates.map(_._2).distinct.toSeq
       } else {
-        println("prev")
         previousGeneratedFiles.toSeq
       }
   }
