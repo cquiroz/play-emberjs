@@ -9,4 +9,5 @@ trait EmberJsKeys {
     val emberJsTemplateFile = SettingKey[String]("play-emberjs-template-file")
     val emberJsFileRegexFrom = SettingKey[String]("play-emberjs-file-regex-from")
     val emberJsFileRegexTo = SettingKey[String]("play-emberjs-file-regex-to")
+    val emberJsVersion = SettingKey[String]("play-emberjs-version")
 }

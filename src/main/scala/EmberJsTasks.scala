@@ -2,14 +2,8 @@ package com.ketalo
 
 import java.io._
 import org.apache.commons.io.FilenameUtils
-import org.mozilla.javascript.tools.shell.Global
-import org.mozilla.javascript.Context
-import org.mozilla.javascript.JavaScriptException
-import org.mozilla.javascript.Scriptable
-import org.mozilla.javascript.ScriptableObject
 
 import sbt._
-import PlayProject._
 import scala.Left
 import scala.Right
 import scala.Some
@@ -17,21 +11,18 @@ import sbt.PlayExceptions.AssetCompilationException
 import java.io.File
 
 trait EmberJsTasks extends EmberJsKeys {
+  val versions = Map("pre.2" -> (("ember-1.0.0-pre.2.for-rhino", "handlebars-1.0.rc.1")))
 
   private def loadResource(name: String): Option[Reader] = {
     Option(this.getClass.getClassLoader.getResource(name)).map(_.openConnection().getInputStream).map(s => new InputStreamReader(s))
   }
 
-  def compile(name: String, source: String): Either[(String, Int, Int), String] = {
+  def compile(version:String, name: String, source: String): Either[(String, Int, Int), String] = {
 
     import org.mozilla.javascript._
     import org.mozilla.javascript.tools.shell._
 
-    import com.ketalo.EmberJsKeys
-
-    import scala.collection.JavaConversions._
-
-    val (ember, handlebars) = ("ember-1.0.0-pre.2.for-rhino", "handlebars-1.0.rc.1")
+    val (ember, handlebars) = versions.get(version).getOrElse(("", ""))
     val ctx = Context.enter
     ctx.setLanguageVersion(org.mozilla.javascript.Context.VERSION_1_7)
     ctx.setOptimizationLevel(9)
@@ -74,8 +65,8 @@ trait EmberJsTasks extends EmberJsKeys {
 
   import Keys._
 
-  lazy val EmberJsCompiler = (sourceDirectory in Compile, resourceManaged in Compile, cacheDirectory, emberJsTemplateFile, emberJsFileRegexFrom, emberJsFileRegexTo, emberJsAssetsDir, emberJsAssetsGlob).map {
-      (src, resources, cache, templateFile, fileReplaceRegexp, fileReplaceWith, assetsDir, files) =>
+  lazy val EmberJsCompiler = (sourceDirectory in Compile, resourceManaged in Compile, cacheDirectory, emberJsVersion, emberJsTemplateFile, emberJsFileRegexFrom, emberJsFileRegexTo, emberJsAssetsDir, emberJsAssetsGlob).map {
+      (src, resources, cache, version, templateFile, fileReplaceRegexp, fileReplaceWith, assetsDir, files) =>
       val cacheFile = cache / "emberjs"
       val global = resources / "public" / "templates" / templateFile
 
@@ -99,7 +90,7 @@ trait EmberJsTasks extends EmberJsKeys {
 
         val generated:Seq[(File, File)] = (files x relativeTo(assetsDir)).flatMap {
           case (sourceFile, name) => {
-            val jsSource = compile(templateName(sourceFile.getPath, assetsDir.getPath), IO.read(sourceFile)).left.map {
+            val jsSource = compile(version, templateName(sourceFile.getPath, assetsDir.getPath), IO.read(sourceFile)).left.map {
               case (msg, line, column) => throw AssetCompilationException(Some(sourceFile),
                 msg,
                 Some(line),
