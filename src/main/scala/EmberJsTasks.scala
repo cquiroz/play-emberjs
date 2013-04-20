@@ -85,20 +85,21 @@ trait EmberJsTasks extends EmberJsKeys {
 
   import Keys._
 
-  lazy val EmberJsCompiler = (sourceDirectory in Compile, resourceManaged in Compile, cacheDirectory, emberJsFileRegexFrom, emberJsFileRegexTo, emberJsAssetsDir, emberJsAssetsGlob).map {
-      (src, resources, cache, fileReplaceRegexp, fileReplaceWith, assetsDir, files) =>
+  lazy val EmberJsCompiler = (sourceDirectory in Compile, resourceManaged in Compile, cacheDirectory, emberJsTemplateFile, emberJsFileRegexFrom, emberJsFileRegexTo, emberJsAssetsDir, emberJsAssetsGlob).map {
+      (src, resources, cache, templateFile, fileReplaceRegexp, fileReplaceWith, assetsDir, files) =>
       val cacheFile = cache / "emberjs"
+      val global = (resources / "public" / "templates" / "templates.pre.js")
 
       def naming(name: String) = name.replaceAll(fileReplaceRegexp, fileReplaceWith)
 
-      val currentInfos = files.get.map(f => f -> FileInfo.lastModified(f)).toMap
+      val latestTimestamp = files.get.sortBy(f => FileInfo.lastModified(f).lastModified).reverse.map(f => FileInfo.lastModified(f)).head
+      val currentInfos = files.get.map(f => f -> FileInfo.lastModified(f))
+      val allFiles = (currentInfos ++ Seq((global, latestTimestamp))).toMap
 
       val (previousRelation, previousInfo) = Sync.readInfo(cacheFile)(FileInfo.lastModified.format)
       val previousGeneratedFiles = previousRelation._2s
 
-
-      if (previousInfo != currentInfos) {
-
+      if (previousInfo != allFiles) {
         previousGeneratedFiles.foreach(IO.delete)
 
         val output = new StringBuilder
@@ -118,33 +119,25 @@ trait EmberJsTasks extends EmberJsKeys {
 
             output ++= "\ntemplates['%s'] = template(%s);\n\n".format(FilenameUtils.removeExtension(name), jsSource)
 
-            val out = new File(resources, "public/javascripts/" + naming(name))
+            val out = new File(resources, "public/templates/" + naming(name))
             IO.write(out, jsSource)
             Seq(sourceFile -> out)
           }
         }
 
-        val global = new File(resources, "public/javascripts/templates.pre.js")
         output ++= "})();\n"
         IO.write(global, output.toString)
         val allTemplates = generated ++ Seq(global -> global)
 
         Sync.writeInfo(cacheFile,
-          Relation.empty[java.io.File, java.io.File] ++ generated,
-          currentInfos)(FileInfo.lastModified.format)
+          Relation.empty[java.io.File, java.io.File] ++ allTemplates,
+          allFiles)(FileInfo.lastModified.format)
 
         allTemplates.map(_._2).distinct.toSeq
       } else {
+        println("prev")
         previousGeneratedFiles.toSeq
       }
   }
 
 }
-
-/*case class AssetCompilationExceptio(message: Option[String], atLine: Option[Int]) extends PlayException.ExceptionSource(
-  "Compilation error", ~message) {
-  def line = ~atLine
-  def position = 0
-  def input = scalax.file.Path(file).toString
-  def sourceName = file.getAbsolutePath
-}*/
