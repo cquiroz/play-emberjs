@@ -3185,7 +3185,7 @@ Ember.destroy = function (obj) {
 @module ember-metal
 */
 
-Ember.warn("The CP_DEFAULT_CACHEABLE flag has been removed and computed properties are always cached by default. Use `nonvolatile` if you don't want caching.", Ember.ENV.CP_DEFAULT_CACHEABLE !== false);
+Ember.warn("The CP_DEFAULT_CACHEABLE flag has been removed and computed properties are always cached by default. Use `_volatile` if you don't want caching.", Ember.ENV.CP_DEFAULT_CACHEABLE !== false);
 
 
 var get = Ember.get,
@@ -3338,14 +3338,14 @@ ComputedPropertyPrototype.cacheable = function(aFlag) {
   MyApp.outsideService = Ember.Object.create({
     value: function() {
       return OutsideService.getValue();
-    }.property().nonvolatile()
+    }.property()._volatile()
   });
   ```
 
-  @method nonvolatile
+  @method _volatile
   @chainable
 */
-ComputedPropertyPrototype.nonvolatile = function() {
+ComputedPropertyPrototype._volatile = function() {
   return this.cacheable(false);
 };
 
@@ -13614,7 +13614,7 @@ Ember.CoreView = Ember.Object.extend(Ember.Evented, {
   concreteView: Ember.computed(function() {
     if (!this.isVirtual) { return this; }
     else { return get(this, 'parentView'); }
-  }).property('parentView').nonvolatile(),
+  }).property('parentView')._volatile(),
 
   instrumentName: 'core_view',
 
@@ -14425,7 +14425,7 @@ Ember.View = Ember.CoreView.extend(
     } else {
       return get(this, '_context');
     }
-  }).nonvolatile(),
+  })._volatile(),
 
   /**
     @private
@@ -18476,7 +18476,7 @@ Ember._HandlebarsBoundView = Ember._MetamorphView.extend({
     }
 
     return valueNormalizer ? valueNormalizer(result) : result;
-  }).property('path', 'pathRoot', 'valueNormalizerFunc').nonvolatile(),
+  }).property('path', 'pathRoot', 'valueNormalizerFunc')._volatile(),
 
   rerenderIfNeeded: function() {
     this.currentState.rerenderIfNeeded(this);
@@ -21350,7 +21350,7 @@ Ember.SelectOption = Ember.View.extend({
       // `new Number(4) !== 4`, we use `==` below
       return content == selection;
     }
-  }).property('content', 'parentView.selection').nonvolatile(),
+  }).property('content', 'parentView.selection')._volatile(),
 
   labelPathDidChange: Ember.observer(function() {
     var labelPath = get(this, 'parentView.optionLabelPath');
@@ -23595,7 +23595,7 @@ Ember.onLoad('Ember.Handlebars', function(Handlebars) {
     // so that you can access the parent with {{view.prop}}
     concreteView: Ember.computed(function() {
       return get(this, 'parentView');
-    }).property('parentView').nonvolatile(),
+    }).property('parentView')._volatile(),
 
     active: Ember.computed(function() {
       var router = this.get('router'),

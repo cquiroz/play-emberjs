@@ -3659,7 +3659,7 @@ Ember.destroy = function (obj) {
 @module ember-metal
 */
 
-Ember.warn("The CP_DEFAULT_CACHEABLE flag has been removed and computed properties are always cached by default. Use `nonvolatile` if you don't want caching.", Ember.ENV.CP_DEFAULT_CACHEABLE !== false);
+Ember.warn("The CP_DEFAULT_CACHEABLE flag has been removed and computed properties are always cached by default. Use `_volatile` if you don't want caching.", Ember.ENV.CP_DEFAULT_CACHEABLE !== false);
 
 
 var get = Ember.get,
@@ -3768,7 +3768,7 @@ var ComputedPropertyPrototype = ComputedProperty.prototype;
 /*
   Call on a computed property to explicitly change it's cacheable mode.
 
-  Please use `.nonvolatile` over this method.
+  Please use `._volatile` over this method.
 
   ```javascript
   MyApp.president = Ember.Object.create({
@@ -3806,15 +3806,15 @@ ComputedPropertyPrototype.cacheable = function(aFlag) {
   MyApp.outsideService = Ember.Object.create({
     value: function() {
       return OutsideService.getValue();
-    }.property().nonvolatile()
+    }.property()._volatile()
   });
   ```
 
-  @method nonvolatile
+  @method _volatile
   @return {Ember.ComputedProperty} this
   @chainable
 */
-ComputedPropertyPrototype.nonvolatile = function() {
+ComputedPropertyPrototype._volatile = function() {
   return this.cacheable(false);
 };
 
@@ -15136,7 +15136,7 @@ Ember.View = Ember.CoreView.extend(
     } else {
       return get(this, '_context');
     }
-  }).nonvolatile(),
+  })._volatile(),
 
   /**
     @private

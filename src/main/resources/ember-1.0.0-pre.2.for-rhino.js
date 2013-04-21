@@ -2944,7 +2944,7 @@ Ember.destroy = function (obj) {
 @module ember-metal
 */
 
-Ember.warn("The CP_DEFAULT_CACHEABLE flag has been removed and computed properties are always cached by default. Use `involatile` if you don't want caching.", Ember.ENV.CP_DEFAULT_CACHEABLE !== false);
+Ember.warn("The CP_DEFAULT_CACHEABLE flag has been removed and computed properties are always cached by default. Use `_volatile` if you don't want caching.", Ember.ENV.CP_DEFAULT_CACHEABLE !== false);
 
 
 var get = Ember.get,
@@ -3097,13 +3097,13 @@ ComputedPropertyPrototype.cacheable = function(aFlag) {
       MyApp.outsideService = Ember.Object.create({
         value: function() {
           return OutsideService.getValue();
-        }.property().involatile()
+        }.property()._volatile()
       });
 
-  @method involatile
+  @method _volatile
   @chainable
 */
-ComputedPropertyPrototype.involatile = function() {
+ComputedPropertyPrototype._volatile = function() {
   return this.cacheable(false);
 };
 
@@ -12782,7 +12782,7 @@ Ember.CoreView = Ember.Object.extend(Ember.Evented, {
     } else {
       return parent;
     }
-  }).property('_parentView').involatile(),
+  }).property('_parentView')._volatile(),
 
   state: 'preRender',
 
@@ -12792,7 +12792,7 @@ Ember.CoreView = Ember.Object.extend(Ember.Evented, {
   concreteView: Ember.computed(function() {
     if (!this.isVirtual) { return this; }
     else { return get(this, 'parentView'); }
-  }).property('_parentView').involatile(),
+  }).property('_parentView')._volatile(),
 
   /**
     Creates a new renderBuffer with the passed tagName. You can override this
@@ -13587,7 +13587,7 @@ Ember.View = Ember.CoreView.extend(
     } else {
       return get(this, '_context');
     }
-  }).involatile(),
+  })._volatile(),
 
   /**
     @private
@@ -19974,7 +19974,7 @@ Ember._SimpleHandlebarsView = Ember._SimpleMetamorphView.extend({
     }
 
     return result;
-  }).property('path', 'pathRoot').involatile(),
+  }).property('path', 'pathRoot')._volatile(),
 
   render: function(buffer) {
     // If not invoked via a triple-mustache ({{{foo}}}), escape
@@ -20129,7 +20129,7 @@ Ember._HandlebarsBoundView = Ember._MetamorphView.extend({
     }
 
     return valueNormalizer ? valueNormalizer(result) : result;
-  }).property('path', 'pathRoot', 'valueNormalizerFunc').involatile(),
+  }).property('path', 'pathRoot', 'valueNormalizerFunc')._volatile(),
 
   rerenderIfNeeded: function() {
     if (!get(this, 'isDestroyed') && get(this, 'normalizedValue') !== this._lastNormalizedValue) {
@@ -22472,11 +22472,11 @@ var get = Ember.get;
 Ember.TabPaneView = Ember.View.extend({
   tabsContainer: Ember.computed(function() {
     return this.nearestOfType(Ember.TabContainerView);
-  }).property().involatile(),
+  }).property()._volatile(),
 
   isVisible: Ember.computed(function() {
     return get(this, 'viewName') === get(this, 'tabsContainer.currentView');
-  }).property('tabsContainer.currentView').involatile(),
+  }).property('tabsContainer.currentView')._volatile(),
 
   init: function() {
     Ember.deprecate("Ember.TabPaneView is deprecated and will be removed from future releases.");
@@ -22505,7 +22505,7 @@ var get = Ember.get, setPath = Ember.setPath;
 Ember.TabView = Ember.View.extend({
   tabsContainer: Ember.computed(function() {
     return this.nearestInstanceOf(Ember.TabContainerView);
-  }).property().involatile(),
+  }).property()._volatile(),
 
   mouseUp: function() {
     setPath(this, 'tabsContainer.currentView', get(this, 'value'));
@@ -23033,7 +23033,7 @@ Ember.SelectOption = Ember.View.extend({
       // `new Number(4) !== 4`, we use `==` below
       return content == selection;
     }
-  }).property('content', 'parentView.selection').involatile(),
+  }).property('content', 'parentView.selection')._volatile(),
 
   labelPathDidChange: Ember.observer(function() {
     var labelPath = get(this, 'parentView.optionLabelPath');
