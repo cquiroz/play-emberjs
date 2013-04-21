@@ -12,9 +12,9 @@ import java.io.File
 
 trait EmberJsTasks extends EmberJsKeys {
   val versions = Map(
-    "pre.2" -> (("ember-1.0.0-pre.2.for-rhino", "handlebars-1.0.rc.1", "headless-ember-pre.2")),
-    "rc.1" -> (("ember-1.0.0-rc.1.for-rhino", "handlebars-1.0.rc.3", "headless-ember-rc.1")),
-    "rc.3" -> (("ember-1.0.0-rc.3.for-rhino", "handlebars-1.0.rc.3", "headless-ember-rc.1"))
+    "1.0.0-pre.2" -> (("ember-1.0.0-pre.2.for-rhino", "handlebars-1.0.rc.1", "headless-ember-pre.2")),
+    "1.0.0-rc.1" -> (("ember-1.0.0-rc.1.for-rhino", "handlebars-1.0.rc.3", "headless-ember-rc.1")),
+    "1.0.0-rc.3" -> (("ember-1.0.0-rc.3.for-rhino", "handlebars-1.0.rc.3", "headless-ember-rc.1"))
   )
 
   private def loadResource(name: String): Option[Reader] = {
@@ -89,7 +89,6 @@ trait EmberJsTasks extends EmberJsKeys {
 
       def naming(name: String) = name.replaceAll(fileReplaceRegexp, fileReplaceWith)
 
-      //val latestTimestamp = files.getOrElse(Seq.empty).sortBy(f => FileInfo.lastModified(f).lastModified).reverse.map(f => FileInfo.lastModified(f)).head
       val latestTimestamp = files.get.sortBy(f => FileInfo.lastModified(f).lastModified).reverse.map(f => FileInfo.lastModified(f)).headOption.getOrElse(FileInfo.lastModified(global))
       val currentInfos = files.get.map(f => f -> FileInfo.lastModified(f))
       val allFiles = (currentInfos ++ Seq((global, latestTimestamp))).toMap

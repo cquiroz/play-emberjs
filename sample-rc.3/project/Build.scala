@@ -1,8 +1,7 @@
+import com.ketalo.EmberJsKeys
 import sbt._
-import Keys._
-import play.Project._
 
-object ApplicationBuild extends Build {
+object ApplicationBuild extends Build with EmberJsKeys {
 
   val appName         = "play-emberjs-sample"
   val appVersion      = "1.0-SNAPSHOT"
@@ -10,7 +9,7 @@ object ApplicationBuild extends Build {
   val appDependencies = Seq.empty
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
-    // Add your own project settings here      
+    emberJsVersion := "1.0.0-rc.3"
   )
 
 }
