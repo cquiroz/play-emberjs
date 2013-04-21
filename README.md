@@ -1,23 +1,26 @@
 # Ember.js Plugin
 
-This plugin provides build time compilation for [Ember.js/handlebars](https://github.com/emberjs/ember.js) templates.
+This plugin provides build time compilation for [Ember.js](https://github.com/emberjs/ember.js) handlebar templates.
 
 # How to install
 
-* add 
+* play 2.1.0:
 
-play 2.1.0:
-
-```addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "0.1.0-SNAPSHOT")``` 
+```
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "0.1.0-SNAPSHOT")
+``` 
 
 to your plugin.sbt
 
 # How to Use
 
+* Select your 
+
 * Include ember.js and the corresponding jQuery and handlebars files. Note that they are not provided by the sbt plugin. Check the ember site for them: [ember.js](https://ember.js) 
-```     <script src="@routes.Assets.at("javascripts/jquery-1.8.2.min.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/handlebars-1.0.rc.1.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/ember-1.0.0-pre.2.js")" type="text/javascript"></script>
+```html
+    <script src="@routes.Assets.at("javascripts/jquery-1.8.2.min.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/handlebars-1.0.rc.3.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/ember-1.0.0-rc.3.js")" type="text/javascript"></script>
 ```
 
 * Put your handlebar template (.handlebars) files under the ```app/assets/templates``` directory
@@ -29,11 +32,11 @@ The template.pre.js file generates a javascript containing all the templates in 
 
 # Sample
 
-For an example, see the bundled sample app for versions
+For an example, see the bundled sample app for three different ember versions
 
-## ember pre.2
-## ember rc.1
-## ember rc.2
+### [ember rc.3](/sample-rc.3)
+### [ember rc.1](/sample-rc.1)
+### [ember pre.2](/sample-pre.2)
 
 ## License
 
