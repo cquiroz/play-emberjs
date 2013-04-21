@@ -53,9 +53,9 @@ The template.pre.js file generates a javascript containing all the templates in 
 
 For an example, see the bundled sample app for three different ember versions
 
-* [ember rc.3](/sample-rc.3)
-* [ember rc.1](/sample-rc.1)
-* [ember pre.2](/sample-pre.2)
+* [ember 1.0.0-rc.3](/sample-1.0.0-rc.3)
+* [ember 1.0.0-rc.1](/sample-1.0.0-rc.1)
+* [ember 1.0.0-pre.2](/sample-1.0.0-pre.2)
 
 # Acknowledgments
 
