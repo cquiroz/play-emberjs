@@ -15,22 +15,23 @@ to your plugin.sbt
 # How to Use
 
 * Select your ember version in your Build.scala. Currently support versions include 1.0.0-rc.3, 1.0.0-rc.1 and 1.0.0-pre.2
-```scala
-import com.ketalo.EmberJsKeys
-import sbt._
 
-object ApplicationBuild extends Build with EmberJsKeys {
+```
+  import com.ketalo.EmberJsKeys
+  import sbt._
 
-  val appName         = "play-emberjs-sample"
-  val appVersion      = "1.0-SNAPSHOT"
+  object ApplicationBuild extends Build with EmberJsKeys {
 
-  val appDependencies = Seq.empty
+    val appName         = "play-emberjs-sample"
+    val appVersion      = "1.0-SNAPSHOT"
 
-  val main = play.Project(appName, appVersion, appDependencies).settings(
-    emberJsVersion := "1.0.0-rc.3"
-  )
+    val appDependencies = Seq.empty
 
-}
+    val main = play.Project(appName, appVersion, appDependencies).settings(
+      emberJsVersion := "1.0.0-rc.3"
+    )
+
+  }
 ```
 
 * Include ember.js and the corresponding jQuery and handlebars files. Note that they are not provided by the sbt plugin. Check the ember site for them: [ember.js](https://ember.js) 
