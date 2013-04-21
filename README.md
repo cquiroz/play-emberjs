@@ -10,13 +10,18 @@ This plugin provides build time compilation for [Ember.js](https://github.com/em
 addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "0.1.0-SNAPSHOT")
 ``` 
 
+You may need to add a reference to Sonatype repository
+```
+resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
+```
+
 to your plugin.sbt
 
 # How to Use
 
 * Select your ember version in your Build.scala. Currently support versions include 1.0.0-rc.3, 1.0.0-rc.1 and 1.0.0-pre.2
 
-```
+```scala
   import com.ketalo.EmberJsKeys
   import sbt._
 
@@ -61,6 +66,7 @@ For an example, see the bundled sample app for three different ember versions
 # Acknowledgments
 
 This plugin was based the work from the blog post [Ember/Handlebars template precompilation with Play](http://eng.netwallet.com/2012/04/25/emberhandlebars-template-precompilation-with-play/)
+
 A lot of the plugin internals were based on the [Dust.js play plugin](https://github.com/typesafehub/play-plugins/tree/master/dust)
 
 ## License
