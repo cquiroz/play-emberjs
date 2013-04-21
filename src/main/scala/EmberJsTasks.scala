@@ -72,7 +72,8 @@ trait EmberJsTasks extends EmberJsKeys {
 
       def naming(name: String) = name.replaceAll(fileReplaceRegexp, fileReplaceWith)
 
-      val latestTimestamp = files.get.sortBy(f => FileInfo.lastModified(f).lastModified).reverse.map(f => FileInfo.lastModified(f)).head
+      //val latestTimestamp = files.getOrElse(Seq.empty).sortBy(f => FileInfo.lastModified(f).lastModified).reverse.map(f => FileInfo.lastModified(f)).head
+      val latestTimestamp = files.get.sortBy(f => FileInfo.lastModified(f).lastModified).reverse.map(f => FileInfo.lastModified(f)).headOption.getOrElse(FileInfo.lastModified(global))
       val currentInfos = files.get.map(f => f -> FileInfo.lastModified(f))
       val allFiles = (currentInfos ++ Seq((global, latestTimestamp))).toMap
 
