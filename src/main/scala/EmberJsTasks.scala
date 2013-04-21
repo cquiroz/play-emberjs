@@ -11,7 +11,10 @@ import sbt.PlayExceptions.AssetCompilationException
 import java.io.File
 
 trait EmberJsTasks extends EmberJsKeys {
-  val versions = Map("pre.2" -> (("ember-1.0.0-pre.2.for-rhino", "handlebars-1.0.rc.1")))
+  val versions = Map(
+    "pre.2" -> (("ember-1.0.0-pre.2.for-rhino", "handlebars-1.0.rc.1", "headless-ember-pre.2")),
+    "rc.1" -> (("ember-1.0.0-rc.1.for-rhino", "handlebars-1.0.rc.3", "headless-ember-rc.1"))
+  )
 
   private def loadResource(name: String): Option[Reader] = {
     Option(this.getClass.getClassLoader.getResource(name)).map(_.openConnection().getInputStream).map(s => new InputStreamReader(s))
@@ -22,7 +25,7 @@ trait EmberJsTasks extends EmberJsKeys {
     import org.mozilla.javascript._
     import org.mozilla.javascript.tools.shell._
 
-    val (ember, handlebars) = versions.get(version).getOrElse(("", ""))
+    val (ember, handlebars, headless) = versions.get(version).getOrElse(("", "", ""))
     val ctx = Context.enter
     ctx.setLanguageVersion(org.mozilla.javascript.Context.VERSION_1_7)
     ctx.setOptimizationLevel(9)
@@ -34,15 +37,27 @@ trait EmberJsTasks extends EmberJsKeys {
     // load handlebars
     val handlebarsFile = loadResource(handlebars + ".js").getOrElse(throw new Exception("handlebars: could not find " + handlebars))
 
-    ctx.evaluateReader(scope, handlebarsFile, handlebars, 1, null)
+    try {
+      ctx.evaluateReader(scope, handlebarsFile, handlebars, 1, null)
+    } catch {
+      case e:Exception => e.printStackTrace()
+    }
     // set up global objects that emulate a browser context
-    val headlessEmberFile = loadResource("headless-ember.js").getOrElse(throw new Exception("handlebars: could not find " + handlebars))
+    val headlessEmberFile = loadResource(headless + ".js").getOrElse(throw new Exception("handlebars: could not find " + handlebars))
 
-    ctx.evaluateReader(scope, headlessEmberFile, handlebars, 1, null)
+    try {
+      ctx.evaluateReader(scope, headlessEmberFile, handlebars, 1, null)
+    } catch {
+      case e:Exception => e.printStackTrace()
+    }
     // load ember
     val emberFile = loadResource(ember + ".js").getOrElse(throw new Exception("ember: could not find " + ember))
 
-    ctx.evaluateReader(scope, emberFile, ember, 1, null)
+    try {
+      ctx.evaluateReader(scope, emberFile, ember, 1, null)
+    } catch {
+      case e:Exception => e.printStackTrace()
+    }
 
     ScriptableObject.putProperty(scope, "rawSource", source.replace("\r", ""))
 
@@ -50,6 +65,7 @@ trait EmberJsTasks extends EmberJsKeys {
       Right(ctx.evaluateString(scope, "(Ember.Handlebars.precompile(rawSource).toString())", "EmberJsCompiler", 0, null).toString)
     } catch {
       case e: JavaScriptException => {
+        e.printStackTrace()
         Left(e.details(), e.lineNumber(), 0)
       }
     }

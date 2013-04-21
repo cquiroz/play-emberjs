@@ -10,7 +10,7 @@ object EmberJsPlugin extends Plugin with EmberJsTasks {
     emberJsAssetsDir <<= (sourceDirectory in Compile)(src => (src / "assets" / "templates")),
     emberJsFileEnding := ".handlebars",
     emberJsTemplateFile := "templates.pre.js",
-    emberJsVersion := "pre.2",
+    emberJsVersion := "rc.1",
     emberJsAssetsGlob <<= (emberJsAssetsDir)(assetsDir =>  (assetsDir ** "*.handlebars")),
     emberJsFileRegexFrom <<= (emberJsFileEnding)(fileEnding => fileEnding),
     emberJsFileRegexTo <<= (emberJsFileEnding)(fileEnding => FilenameUtils.removeExtension(fileEnding) + ".js"),
