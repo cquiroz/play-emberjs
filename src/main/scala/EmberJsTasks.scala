@@ -43,7 +43,7 @@ trait EmberJsTasks extends EmberJsKeys {
       case e:Exception => e.printStackTrace()
     }
     // set up global objects that emulate a browser context
-    val headlessEmberFile = loadResource(headless + ".js").getOrElse(throw new Exception("handlebars: could not find " + handlebars))
+    val headlessEmberFile = loadResource(headless + ".js").getOrElse(throw new Exception("headless-ember: could not find " + headless))
 
     try {
       ctx.evaluateReader(scope, headlessEmberFile, handlebars, 1, null)
