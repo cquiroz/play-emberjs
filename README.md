@@ -53,7 +53,7 @@ to your plugin.sbt
 <script src="@routes.Assets.at("templates/templates.pre.js")"></script>
 ```
 
-The templates.pre.js file generates a javascript containing all the templates in that directory
+The generated templates.pre.js has the javascript code containing all the precompiled templates in that directory
 
 # Sample
 
