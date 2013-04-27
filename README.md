@@ -50,10 +50,10 @@ to your plugin.sbt
 
 * Reference the generated .js in a  ```<script>``` tag:
 ```
-<script src="@routes.Assets.at("templates/template.pre.js")"></script>
+<script src="@routes.Assets.at("templates/templates.pre.js")"></script>
 ```
 
-The template.pre.js file generates a javascript containing all the templates in that directory
+The templates.pre.js file generates a javascript containing all the templates in that directory
 
 # Sample
 
@@ -67,7 +67,7 @@ For an example, see the bundled sample app for three different ember versions
 
 This plugin was based the work from the blog post [Ember/Handlebars template precompilation with Play](http://eng.netwallet.com/2012/04/25/emberhandlebars-template-precompilation-with-play/)
 
-A lot of the plugin internals were based on the [Dust.js play plugin](https://github.com/typesafehub/play-plugins/tree/master/dust)
+A good portion of the plugin internals were based on the [Dust.js play plugin](https://github.com/typesafehub/play-plugins/tree/master/dust)
 
 ## License
 
