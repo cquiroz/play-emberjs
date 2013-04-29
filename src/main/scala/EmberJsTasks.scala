@@ -35,30 +35,19 @@ trait EmberJsTasks extends EmberJsKeys {
     global.init(ctx)
     val scope = ctx.initStandardObjects(global)
 
-    // load handlebars
-    val handlebarsFile = loadResource(handlebars + ".js").getOrElse(throw new Exception("handlebars: could not find " + handlebars))
+    def loadScript(script: String) {
+      // load handlebars
+      val scriptFile = loadResource(script + ".js").getOrElse(throw new Exception("script: could not find " + script))
 
-    try {
-      ctx.evaluateReader(scope, handlebarsFile, handlebars, 1, null)
-    } catch {
-      case e:Exception => e.printStackTrace()
+      try {
+        ctx.evaluateReader(scope, scriptFile, script, 1, null)
+      } catch {
+        case e: Exception => e.printStackTrace()
+      }
     }
-    // set up global objects that emulate a browser context
-    val headlessEmberFile = loadResource(headless + ".js").getOrElse(throw new Exception("headless-ember: could not find " + headless))
-
-    try {
-      ctx.evaluateReader(scope, headlessEmberFile, handlebars, 1, null)
-    } catch {
-      case e:Exception => e.printStackTrace()
-    }
-    // load ember
-    val emberFile = loadResource(ember + ".js").getOrElse(throw new Exception("ember: could not find " + ember))
-
-    try {
-      ctx.evaluateReader(scope, emberFile, ember, 1, null)
-    } catch {
-      case e:Exception => e.printStackTrace()
-    }
+    loadScript(handlebars)
+    loadScript(headless)
+    loadScript(ember)
 
     ScriptableObject.putProperty(scope, "rawSource", source.replace("\r", ""))
 
