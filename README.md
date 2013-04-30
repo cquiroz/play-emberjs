@@ -49,14 +49,14 @@ to your plugin.sbt
 * Put your handlebar template (.handlebars) files under the ```app/assets/templates``` directory
 
 * Reference the generated .js in a  ```<script>``` tag:
-```
+```html
 <script src="@routes.Assets.at("templates/templates.pre.js")"></script>
 ```
 
 The generated templates.pre.js has the javascript code containing all the precompiled templates in that directory
 
 * **OR** Reference the minified .js in a  ```<script>``` tag:
-```
+```html
 <script src="@routes.Assets.at("templates/templates.pre.min.js")"></script>
 ```
 
@@ -77,7 +77,7 @@ A good portion of the plugin internals were based on the [Dust.js play plugin](h
 # Modifications to ember.js
 
 Ember.js uses modern javascript features that are not properly supported by rhino 1.7R4 which is the one used with the play framework.
-This has been documented in [rhino#93](https://github.com/mozilla/rhino/issues/93) and [emberjs#1202](https://github.com/emberjs/ember.js/issues/1202)
+This has been documented in [rhino#93](https://github.com/mozilla/rhino/issues/93) and [emberjs#1202](https://github.com/emberjs/ember.js/issues/1202).
 The plugin thus need a customized version of the ember-xxx.js file that can be complied by rhino.
 
 The changes required are:
