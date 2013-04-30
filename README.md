@@ -56,7 +56,7 @@ to your plugin.sbt
 The generated templates.pre.js has the javascript code containing all the precompiled templates in that directory
 
 * **OR** Reference the minified .js in a  ```<script>``` tag:
-```html
+```
 <script src="@routes.Assets.at("templates/templates.pre.min.js")"></script>
 ```
 
