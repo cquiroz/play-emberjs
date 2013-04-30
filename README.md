@@ -69,6 +69,19 @@ This plugin was based the work from the blog post [Ember/Handlebars template pre
 
 A good portion of the plugin internals were based on the [Dust.js play plugin](https://github.com/typesafehub/play-plugins/tree/master/dust)
 
+# Modifications to ember.js
+
+Ember.js uses modern javascript features that are not properly supported by rhino 1.7R4 which is the one used with the play framework.
+
+This has been documented in [rhino#93](https://github.com/mozilla/rhino/issues/93) and [emberjs#1202](https://github.com/emberjs/ember.js/issues/1202)
+
+The plugin thus need a customized version of the ember-xxx.js file that can be complied by rhino.
+
+The changes required are:
+
+* Ember.js defines a function **ComputedPropertyPrototype.volatile**. **volatile** is a reserved keyword in rhino, so all instances are replaced by **_volatile**
+* Ember.js uses sometime the name **char** as a variable name and that isn't supported in rhino either. In each case the variable is renamed to **ch**
+
 ## License
 
 This software is licensed under the Apache 2 license, quoted below.
