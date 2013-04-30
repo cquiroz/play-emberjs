@@ -74,13 +74,15 @@ trait EmberJsTasks extends EmberJsKeys {
   lazy val EmberJsCompiler = (sourceDirectory in Compile, resourceManaged in Compile, cacheDirectory, emberJsVersion, emberJsTemplateFile, emberJsFileRegexFrom, emberJsFileRegexTo, emberJsAssetsDir, emberJsAssetsGlob).map {
       (src, resources, cache, version, templateFile, fileReplaceRegexp, fileReplaceWith, assetsDir, files) =>
       val cacheFile = cache / "emberjs"
-      val global = resources / "public" / "templates" / templateFile
+      val templatesDir = resources / "public" / "templates"
+      val global = templatesDir / templateFile
+      val globalMinified = templatesDir / (FilenameUtils.removeExtension(templateFile) + ".min.js")
 
       def naming(name: String) = name.replaceAll(fileReplaceRegexp, fileReplaceWith)
 
       val latestTimestamp = files.get.sortBy(f => FileInfo.lastModified(f).lastModified).reverse.map(f => FileInfo.lastModified(f)).headOption.getOrElse(FileInfo.lastModified(global))
       val currentInfos = files.get.map(f => f -> FileInfo.lastModified(f))
-      val allFiles = (currentInfos ++ Seq((global, latestTimestamp))).toMap
+      val allFiles = (currentInfos ++ Seq(global -> latestTimestamp, globalMinified -> latestTimestamp)).toMap
 
       val (previousRelation, previousInfo) = Sync.readInfo(cacheFile)(FileInfo.lastModified.format)
       val previousGeneratedFiles = previousRelation._2s
@@ -113,7 +115,13 @@ trait EmberJsTasks extends EmberJsKeys {
 
         output ++= "})();\n"
         IO.write(global, output.toString)
-        val allTemplates = generated ++ Seq(global -> global)
+        import scala.util.control.Exception._
+
+        // Minify
+        val minified = play.core.jscompile.JavascriptCompiler.minify(output.toString, None)
+        IO.write(globalMinified, minified)
+
+        val allTemplates = generated ++ Seq(global -> global, globalMinified -> globalMinified)
 
         Sync.writeInfo(cacheFile,
           Relation.empty[java.io.File, java.io.File] ++ allTemplates,
