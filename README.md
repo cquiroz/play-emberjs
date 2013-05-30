@@ -4,10 +4,10 @@ This plugin provides build time compilation for [Ember.js](https://github.com/em
 
 # How to install
 
-* play 2.1.0:
+* play 2.1.x:
 
 ```
-addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "0.1.0-SNAPSHOT")
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "0.2.0-SNAPSHOT")
 ``` 
 
 You may need to add a reference to Sonatype repository
@@ -33,7 +33,7 @@ to your plugin.sbt
     val appDependencies = Seq.empty
 
     val main = play.Project(appName, appVersion, appDependencies).settings(
-      emberJsVersion := "1.0.0-rc.3"
+      emberJsVersion := "1.0.0-rc.4"
     )
 
   }
@@ -42,8 +42,8 @@ to your plugin.sbt
 * Include ember.js and the corresponding jQuery and handlebars files. Note that they are not provided by the sbt plugin. Check the ember site for them: [ember.js](https://ember.js) 
 ```html
     <script src="@routes.Assets.at("javascripts/jquery-1.8.2.min.js")" type="text/javascript"></script>
-    <script src="@routes.Assets.at("javascripts/handlebars-1.0.rc.3.js")" type="text/javascript"></script>
-    <script src="@routes.Assets.at("javascripts/ember-1.0.0-rc.3.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/handlebars-1.0.rc.4.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/ember-1.0.0-rc.4.js")" type="text/javascript"></script>
 ```
 
 * Put your handlebar template (.handlebars) files under the ```app/assets/templates``` directory
@@ -64,6 +64,7 @@ The generated templates.pre.js has the javascript code containing all the precom
 
 For an example, see the bundled sample app for three different ember versions
 
+* [ember 1.0.0-rc.4](/sample-1.0.0-rc.4)
 * [ember 1.0.0-rc.3](/sample-1.0.0-rc.3)
 * [ember 1.0.0-rc.1](/sample-1.0.0-rc.1)
 * [ember 1.0.0-pre.2](/sample-1.0.0-pre.2)
@@ -85,7 +86,7 @@ The changes required are:
 * Ember.js defines a function **ComputedPropertyPrototype.volatile**. **volatile** is a reserved keyword in rhino, so all instances are replaced by **_volatile**
 * Ember.js uses sometime the name **char** as a variable name and that isn't supported in rhino either. In each case the variable is renamed to **ch**
 
-## License
+# License
 
 This software is licensed under the Apache 2 license, quoted below.
 
@@ -94,3 +95,8 @@ Copyright 2013 by Carlos Quiroz
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this project except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+# Changelog
+
+* version 0.2.0-SNAPSHOT Include support for ember.js 1.0 rc4
+* version 0.1.0-SNAPSHOT Initial release
