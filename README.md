@@ -7,7 +7,7 @@ This plugin provides build time compilation for [Ember.js](https://github.com/em
 * play 2.1.x:
 
 ```
-addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "0.2.0-SNAPSHOT")
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "0.3.0-SNAPSHOT")
 ``` 
 
 You may need to add a reference to Sonatype repository
@@ -19,7 +19,7 @@ to your plugin.sbt
 
 # How to Use
 
-* Select your ember version in your Build.scala. Currently support versions include 1.0.0-rc.3, 1.0.0-rc.1 and 1.0.0-pre.2
+* Select your ember version in your Build.scala. Currently support versions include 1.0.0-rc.5, 1.0.0-rc.4, 1.0.0-rc.3, 1.0.0-rc.1 and 1.0.0-pre.2
 
 ```scala
   import com.ketalo.EmberJsKeys
@@ -33,7 +33,7 @@ to your plugin.sbt
     val appDependencies = Seq.empty
 
     val main = play.Project(appName, appVersion, appDependencies).settings(
-      emberJsVersion := "1.0.0-rc.4"
+      emberJsVersion := "1.0.0-rc.5"
     )
 
   }
@@ -43,7 +43,7 @@ to your plugin.sbt
 ```html
     <script src="@routes.Assets.at("javascripts/jquery-1.8.2.min.js")" type="text/javascript"></script>
     <script src="@routes.Assets.at("javascripts/handlebars-1.0.rc.4.js")" type="text/javascript"></script>
-    <script src="@routes.Assets.at("javascripts/ember-1.0.0-rc.4.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/ember-1.0.0-rc.5.js")" type="text/javascript"></script>
 ```
 
 * Put your handlebar template (.handlebars) files under the ```app/assets/templates``` directory
@@ -64,6 +64,7 @@ The generated templates.pre.js has the javascript code containing all the precom
 
 For an example, see the bundled sample app for three different ember versions
 
+* [ember 1.0.0-rc.5](/sample-1.0.0-rc.5)
 * [ember 1.0.0-rc.4](/sample-1.0.0-rc.4)
 * [ember 1.0.0-rc.3](/sample-1.0.0-rc.3)
 * [ember 1.0.0-rc.1](/sample-1.0.0-rc.1)
@@ -98,5 +99,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 # Changelog
 
+* version 0.3.0-SNAPSHOT Include support for ember.js 1.0 rc5
 * version 0.2.0-SNAPSHOT Include support for ember.js 1.0 rc4
 * version 0.1.0-SNAPSHOT Initial release
