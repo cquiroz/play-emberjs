@@ -1,4 +1,4 @@
-import com.ketalo.EmberJsKeys
+import com.ketalo.play.plugins.emberjs.EmberJsKeys
 import sbt._
 
 object ApplicationBuild extends Build with EmberJsKeys {

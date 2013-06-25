@@ -22,7 +22,7 @@ to your plugin.sbt
 * Select your ember version in your Build.scala. Currently support versions include 1.0.0-rc.5, 1.0.0-rc.4, 1.0.0-rc.3, 1.0.0-rc.1 and 1.0.0-pre.2
 
 ```scala
-  import com.ketalo.EmberJsKeys
+  import com.ketalo.play.plugins.emberjs.EmberJsKeys
   import sbt._
 
   object ApplicationBuild extends Build with EmberJsKeys {

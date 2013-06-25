@@ -1,4 +1,4 @@
-package com.ketalo
+package com.ketalo.play.plugins.emberjs
 
 import sbt._
 
