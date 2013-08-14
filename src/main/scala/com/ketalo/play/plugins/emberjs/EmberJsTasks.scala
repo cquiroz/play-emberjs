@@ -12,12 +12,13 @@ import java.io.File
 
 trait EmberJsTasks extends EmberJsKeys {
   val versions = Map(
-    "1.0.0-pre.2" -> (("ember-1.0.0-pre.2.for-rhino", "handlebars-1.0.rc.1", "headless-ember-pre.2")),
-    "1.0.0-rc.1" -> (("ember-1.0.0-rc.1.for-rhino", "handlebars-1.0.rc.3", "headless-ember-rc.1")),
-    "1.0.0-rc.3" -> (("ember-1.0.0-rc.3.for-rhino", "handlebars-1.0.rc.3", "headless-ember-rc.1")),
-    "1.0.0-rc.4" -> (("ember-1.0.0-rc.4.for-rhino", "handlebars-1.0.rc.4", "headless-ember-rc.1")),
-    "1.0.0-rc.5" -> (("ember-1.0.0-rc.5.for-rhino", "handlebars-1.0.rc.4", "headless-ember-rc.1")),
-    "1.0.0-rc.6" -> (("ember-1.0.0-rc.6.for-rhino", "handlebars-1.0.rc.4", "headless-ember-rc.1"))
+    "1.0.0-pre.2"  -> (("ember-1.0.0-pre.2.for-rhino", "handlebars-1.0.rc.1", "headless-ember-pre.2")),
+    "1.0.0-rc.1"   -> (("ember-1.0.0-rc.1.for-rhino", "handlebars-1.0.rc.3", "headless-ember-rc.1")),
+    "1.0.0-rc.3"   -> (("ember-1.0.0-rc.3.for-rhino", "handlebars-1.0.rc.3", "headless-ember-rc.1")),
+    "1.0.0-rc.4"   -> (("ember-1.0.0-rc.4.for-rhino", "handlebars-1.0.rc.4", "headless-ember-rc.1")),
+    "1.0.0-rc.5"   -> (("ember-1.0.0-rc.5.for-rhino", "handlebars-1.0.rc.4", "headless-ember-rc.1")),
+    "1.0.0-rc.6"   -> (("ember-1.0.0-rc.6.for-rhino", "handlebars-1.0.rc.4", "headless-ember-rc.1")),
+    "1.0.0-rc.7"   -> (("ember-1.0.0-rc.7.for-rhino", "handlebars-1.0.0", "headless-ember-rc.1"))
   )
 
   private def loadResource(name: String): Option[Reader] = {
@@ -58,7 +59,9 @@ trait EmberJsTasks extends EmberJsKeys {
       Right(ctx.evaluateString(scope, "(Ember.Handlebars.precompile(rawSource).toString())", "EmberJsCompiler", 0, null).toString)
     } catch {
       case e: JavaScriptException => {
-        e.printStackTrace()
+        Left(e.details(), e.lineNumber(), 0)
+      }
+      case e: org.mozilla.javascript.EcmaError => {
         Left(e.details(), e.lineNumber(), 0)
       }
     }
@@ -118,7 +121,6 @@ trait EmberJsTasks extends EmberJsKeys {
 
         output ++= "})();\n"
         IO.write(global, output.toString)
-        import scala.util.control.Exception._
 
         // Minify
         val minified = play.core.jscompile.JavascriptCompiler.minify(output.toString, None)
