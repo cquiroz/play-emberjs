@@ -1,6 +1,6 @@
 name := "emberjs"
 
-version := "1.0.0-SNAPSHOT"
+version := "1.0.0"
 
 sbtPlugin := true
 
@@ -33,11 +33,11 @@ publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
 
 pomExtra := (
-  <url>https://github.com/krumpi/play-emberjs</url>
+  <url>https://github.com/krumpi</url>
   <licenses>
     <license>
       <name>BSD-style</name>
-      <url>https://github.com/krumpi/play-emberjs/blob/master/LICENSE</url>
+      <url>http://www.opensource.org/licenses/bsd-license.php</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
