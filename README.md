@@ -10,7 +10,13 @@ This plugin provides build time compilation for [Ember.js](https://github.com/em
 addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.0.0")
 ``` 
 
-You may need to add a reference to Sonatype repository
+* play 2.2.x
+
+```
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.0.1-SNAPSHOT")
+```
+
+You may need to add a reference to the Sonatype repository
 ```
 resolvers += "Sonatype releases" at "http://oss.sonatype.org/service/local/staging/deploy/maven2"
 ```
