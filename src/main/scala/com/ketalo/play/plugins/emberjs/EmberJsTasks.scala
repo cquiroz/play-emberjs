@@ -4,11 +4,7 @@ import java.io._
 import org.apache.commons.io.FilenameUtils
 
 import sbt._
-import scala.Left
-import scala.Right
-import scala.Some
-import sbt.PlayExceptions.AssetCompilationException
-import java.io.File
+import play.PlayExceptions.AssetCompilationException
 
 trait EmberJsTasks extends EmberJsKeys {
   val versions = Map(

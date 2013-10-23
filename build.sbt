@@ -1,22 +1,20 @@
 name := "emberjs"
 
-version := "1.0.0"
+version := "1.0.1-SNAPSHOT"
 
 sbtPlugin := true
 
 organization := "com.ketalo.play.plugins"
 
-description := "SBT plugin for precompiling Ember.js assets in Play 2.1.x"
+description := "SBT plugin for precompiling Ember.js assets in Play 2.2.x"
 
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
 /// Dependencies
 
-libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "1.7.1" % "test"
-)
+libraryDependencies ++= Seq()
 
-addSbtPlugin("play" % "sbt-plugin" % "2.1.0")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.2.0")
 
 publishTo <<= version { v: String =>
   val nexus = "https://oss.sonatype.org/"
