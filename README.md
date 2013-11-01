@@ -4,16 +4,10 @@ This plugin provides build time compilation for [Ember.js](https://github.com/em
 
 # How to install
 
-* play 2.1.x:
-
-```
-addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.0.0")
-``` 
-
 * play 2.2.x
 
 ```
-addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.0.1-SNAPSHOT")
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.1.2-SNAPSHOT")
 ```
 
 You may need to add a reference to the Sonatype repository
@@ -21,11 +15,17 @@ You may need to add a reference to the Sonatype repository
 resolvers += "Sonatype releases" at "http://oss.sonatype.org/service/local/staging/deploy/maven2"
 ```
 
+* play 2.1.x:
+
+```
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.0.0")
+``` 
+
 to your plugin.sbt
 
 # How to Use
 
-* Select your ember version in your Build.scala. Currently support versions include 1.0.0, 1.0.0-rc.8, 1.0.0-rc.7, 1.0.0-rc.6, 1.0.0-rc.5, 1.0.0-rc.4, 1.0.0-rc.3, 1.0.0-rc.1 and 1.0.0-pre.2
+* Select your ember version in your Build.scala. Currently support versions include 1.1.2, 1.0.0, 1.0.0-rc.8, 1.0.0-rc.7, 1.0.0-rc.6, 1.0.0-rc.5, 1.0.0-rc.4, 1.0.0-rc.3, 1.0.0-rc.1 and 1.0.0-pre.2
 
 ```scala
   import com.ketalo.play.plugins.emberjs.EmberJsKeys
@@ -39,7 +39,7 @@ to your plugin.sbt
     val appDependencies = Seq.empty
 
     val main = play.Project(appName, appVersion, appDependencies).settings(
-      emberJsVersion := "1.0.0"
+      emberJsVersion := "1.1.2"
     )
 
   }
@@ -71,14 +71,14 @@ The generated templates.pre.js has the javascript code containing all the precom
 For an example, see the bundled sample app for three different ember versions
 
 * [ember 1.0.0](/sample-1.0.0)
-* [ember 1.0.0-rc.8](/sample-1.0.0-rc.8)
-* [ember 1.0.0-rc.7](/sample-1.0.0-rc.7)
-* [ember 1.0.0-rc.6](/sample-1.0.0-rc.6)
-* [ember 1.0.0-rc.5](/sample-1.0.0-rc.5)
-* [ember 1.0.0-rc.4](/sample-1.0.0-rc.4)
-* [ember 1.0.0-rc.3](/sample-1.0.0-rc.3)
-* [ember 1.0.0-rc.1](/sample-1.0.0-rc.1)
-* [ember 1.0.0-pre.2](/sample-1.0.0-pre.2)
+* [ember 1.0.0-rc.8](samples-pre-1.0/sample-1.0.0-rc.8)
+* [ember 1.0.0-rc.7](samples-pre-1.0/sample-1.0.0-rc.7)
+* [ember 1.0.0-rc.6](samples-pre-1.0/sample-1.0.0-rc.6)
+* [ember 1.0.0-rc.5](samples-pre-1.0/sample-1.0.0-rc.5)
+* [ember 1.0.0-rc.4](samples-pre-1.0/sample-1.0.0-rc.4)
+* [ember 1.0.0-rc.3](samples-pre-1.0/sample-1.0.0-rc.3)
+* [ember 1.0.0-rc.1](samples-pre-1.0/sample-1.0.0-rc.1)
+* [ember 1.0.0-pre.2](samples-pre-1.0/sample-1.0.0-pre.2)
 
 # Acknowledgments
 
@@ -109,7 +109,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 # Changelog
 
-* version 1.0.0-SNAPSHOT Supports ember.js 1.0.0
+* version 1.1.2 Supports ember.js 1.1.2 and play 2.2.x
+* version 1.0.0 Supports ember.js 1.0.0
 * version 0.6.0-SNAPSHOT Include support for ember.js 1.0 rc8
 * version 0.5.0-SNAPSHOT Include support for ember.js 1.0 rc7
 * version 0.4.0-SNAPSHOT Include support for ember.js 1.0 rc6
