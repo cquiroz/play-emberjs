@@ -14,7 +14,7 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 
 libraryDependencies ++= Seq()
 
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.2.0")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.2.1")
 
 publishTo <<= version { v: String =>
   val nexus = "https://oss.sonatype.org/"
