@@ -7,6 +7,8 @@ import sbt._
 import play.PlayExceptions.AssetCompilationException
 
 trait EmberJsTasks extends EmberJsKeys {
+  val modificationTimeCache = scala.collection.mutable.Map.empty[String, Long] // Keeps track of the modification time
+
   val versions = Map(
     "1.0.0-pre.2" -> (("ember-1.0.0-pre.2.for-rhino", "handlebars-1.0.rc.1", "headless-ember-pre.2")),
     "1.0.0-rc.1"  -> (("ember-1.0.0-rc.1.for-rhino", "handlebars-1.0.rc.3", "headless-ember-rc.1")),
@@ -25,6 +27,7 @@ trait EmberJsTasks extends EmberJsKeys {
   }
 
   def compile(version:String, name: String, source: String): Either[(String, Int, Int), String] = {
+    println(s"Compile file $name")
 
     import org.mozilla.javascript._
     import org.mozilla.javascript.tools.shell._
@@ -93,8 +96,6 @@ trait EmberJsTasks extends EmberJsKeys {
       val previousGeneratedFiles = previousRelation._2s
 
       if (previousInfo != allFiles) {
-        previousGeneratedFiles.foreach(IO.delete)
-
         val output = new StringBuilder
         output ++= """(function() {
           var template = Ember.Handlebars.template,
@@ -103,12 +104,17 @@ trait EmberJsTasks extends EmberJsKeys {
 
         val generated:Seq[(File, File)] = (files x relativeTo(assetsDir)).flatMap {
           case (sourceFile, name) => {
-            val jsSource = compile(version, templateName(sourceFile.getPath, assetsDir.getPath), IO.read(sourceFile)).left.map {
-              case (msg, line, column) => throw AssetCompilationException(Some(sourceFile),
-                msg,
-                Some(line),
-                Some(column))
-            }.right.get
+            val jsSource = if (modificationTimeCache.get(sourceFile.getAbsolutePath).map(time => time != sourceFile.lastModified()).getOrElse(true)) {
+              compile(version, templateName(sourceFile.getPath, assetsDir.getPath), IO.read(sourceFile)).left.map {
+                case (msg, line, column) => throw AssetCompilationException(Some(sourceFile),
+                  msg,
+                  Some(line),
+                  Some(column))
+              }.right.get
+            } else {
+              IO.read(new File(resources, "public/templates/" + naming(name)))
+            }
+            modificationTimeCache += (sourceFile.getAbsolutePath -> sourceFile.lastModified)
 
             output ++= "\ntemplates['%s'] = template(%s);\n\n".format(FilenameUtils.removeExtension(name), jsSource)
 
