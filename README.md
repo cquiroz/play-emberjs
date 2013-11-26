@@ -25,7 +25,7 @@ to your plugin.sbt
 
 # How to Use
 
-* Select your ember version in your Build.scala. Currently support versions include 1.1.2, 1.0.0, 1.0.0-rc.8, 1.0.0-rc.7, 1.0.0-rc.6, 1.0.0-rc.5, 1.0.0-rc.4, 1.0.0-rc.3, 1.0.0-rc.1 and 1.0.0-pre.2
+* Select your ember version in your Build.scala. Currently supported versions include 1.2.0, 1.1.2, 1.0.0, 1.0.0-rc.8, 1.0.0-rc.7, 1.0.0-rc.6, 1.0.0-rc.5, 1.0.0-rc.4, 1.0.0-rc.3, 1.0.0-rc.1 and 1.0.0-pre.2
 
 ```scala
   import com.ketalo.play.plugins.emberjs.EmberJsKeys
@@ -39,7 +39,7 @@ to your plugin.sbt
     val appDependencies = Seq.empty
 
     val main = play.Project(appName, appVersion, appDependencies).settings(
-      emberJsVersion := "1.1.2"
+      emberJsVersion := "1.2.0-SNAPSHOT"
     )
 
   }
@@ -48,7 +48,7 @@ to your plugin.sbt
 * Include ember.js and the corresponding jQuery and handlebars files. Note that they are not provided by the sbt plugin. Check the ember site for them: [ember.js](https://ember.js) 
 ```html
     <script src="@routes.Assets.at("javascripts/jquery-1.8.2.min.js")" type="text/javascript"></script>
-    <script src="@routes.Assets.at("javascripts/handlebars-1.0.0.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/handlebars-v1.1.2.js")" type="text/javascript"></script>
     <script src="@routes.Assets.at("javascripts/ember.min.js")" type="text/javascript"></script>
 ```
 
@@ -70,6 +70,8 @@ The generated templates.pre.js has the javascript code containing all the precom
 
 For an example, see the bundled sample app for three different ember versions
 
+* [ember 1.2.0](/sample-1.2.0)
+* [ember 1.1.2](/sample-1.1.2)
 * [ember 1.0.0](/sample-1.0.0)
 * [ember 1.0.0-rc.8](samples-pre-1.0/sample-1.0.0-rc.8)
 * [ember 1.0.0-rc.7](samples-pre-1.0/sample-1.0.0-rc.7)
@@ -109,6 +111,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 # Changelog
 
+* version 1.2.0 Supports ember.js 1.2.0 and adds smarter caching to compile only templates that have changed
 * version 1.1.2 Supports ember.js 1.1.2 and play 2.2.x
 * version 1.0.0 Supports ember.js 1.0.0
 * version 0.6.0-SNAPSHOT Include support for ember.js 1.0 rc8
