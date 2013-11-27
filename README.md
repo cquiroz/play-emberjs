@@ -7,7 +7,7 @@ This plugin provides build time compilation for [Ember.js](https://github.com/em
 * play 2.2.x
 
 ```
-addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.1.2-SNAPSHOT")
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.2.0-SNAPSHOT")
 ```
 
 You may need to add a reference to the Sonatype repository
@@ -39,7 +39,7 @@ to your plugin.sbt
     val appDependencies = Seq.empty
 
     val main = play.Project(appName, appVersion, appDependencies).settings(
-      emberJsVersion := "1.2.0-SNAPSHOT"
+      emberJsVersion := "1.2.0"
     )
 
   }
