@@ -9,7 +9,7 @@ object ApplicationBuild extends Build with EmberJsKeys {
   val appDependencies = Seq.empty
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
-    emberJsVersion := "1.1.2"
+    emberJsVersion := "1.2.0"
   )
 
 }

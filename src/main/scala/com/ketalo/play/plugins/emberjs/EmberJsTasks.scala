@@ -28,7 +28,7 @@ trait EmberJsTasks extends EmberJsKeys {
   }
 
   def compile(version:String, name: String, source: String): Either[(String, Int, Int), String] = {
-    println(s"Compile file $name")
+    println(s"Compile handlebars template: $name")
 
     import org.mozilla.javascript._
     import org.mozilla.javascript.tools.shell._
@@ -36,7 +36,7 @@ trait EmberJsTasks extends EmberJsKeys {
     val (ember, handlebars, headless) = versions.get(version).getOrElse(("", "", ""))
     val ctx = Context.enter
     ctx.setLanguageVersion(org.mozilla.javascript.Context.VERSION_1_7)
-    ctx.setOptimizationLevel(9)
+    ctx.setOptimizationLevel(-1) // Needed to get around a 64K limit
 
     val global = new Global
     global.init(ctx)
