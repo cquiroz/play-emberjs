@@ -105,8 +105,9 @@ trait EmberJsTasks extends EmberJsKeys {
 
         val generated:Seq[(File, File)] = (files x relativeTo(assetsDir)).flatMap {
           case (sourceFile, name) => {
+            val template = templateName(sourceFile.getPath, assetsDir.getPath)
             val jsSource = if (modificationTimeCache.get(sourceFile.getAbsolutePath).map(time => time != sourceFile.lastModified()).getOrElse(true)) {
-              compile(version, templateName(sourceFile.getPath, assetsDir.getPath), IO.read(sourceFile)).left.map {
+              compile(version, template, IO.read(sourceFile)).left.map {
                 case (msg, line, column) => throw AssetCompilationException(Some(sourceFile),
                   msg,
                   Some(line),
@@ -117,7 +118,7 @@ trait EmberJsTasks extends EmberJsKeys {
             }
             modificationTimeCache += (sourceFile.getAbsolutePath -> sourceFile.lastModified)
 
-            output ++= "\ntemplates['%s'] = template(%s);\n\n".format(FilenameUtils.removeExtension(name), jsSource)
+            output ++= "\ntemplates['%s'] = template(%s);\n\n".format(template, jsSource)
 
             val out = new File(resources, "public/templates/" + naming(name))
             IO.write(out, jsSource)
