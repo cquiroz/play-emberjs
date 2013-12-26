@@ -28,7 +28,7 @@ trait EmberJsTasks extends EmberJsKeys {
   }
 
   def compile(version:String, name: String, source: String): Either[(String, Int, Int), String] = {
-    println(s"Compile handlebars template: $name")
+    println(s"Compile handlebars template: $name with ember version $version")
 
     import org.mozilla.javascript._
     import org.mozilla.javascript.tools.shell._

@@ -4391,11 +4391,11 @@ ComputedPropertyPrototype.cacheable = function(aFlag) {
   });
   ```
 
-  @method volatile
+  @method _volatile
   @return {Ember.ComputedProperty} this
   @chainable
 */
-ComputedPropertyPrototype.volatile = function() {
+ComputedPropertyPrototype._volatile = function() {
   return this.cacheable(false);
 };
 
@@ -20655,7 +20655,7 @@ Ember.View = Ember.CoreView.extend(
     } else {
       return get(this, '_context');
     }
-  }).volatile(),
+  })._volatile(),
 
   /**
     @private
@@ -22773,7 +22773,7 @@ Ember.ContainerView = Ember.View.extend(Ember.MutableArray, {
 
   length: Ember.computed(function () {
     return this._childViews.length;
-  }).volatile(),
+  })._volatile(),
 
   /**
     @private
@@ -29307,11 +29307,11 @@ define("route-recognizer",
     function StaticSegment(string) { this.string = string; }
     StaticSegment.prototype = {
       eachChar: function(callback) {
-        var string = this.string, char;
+        var string = this.string, ch;
 
         for (var i=0, l=string.length; i<l; i++) {
-          char = string.charAt(i);
-          callback({ validChars: char });
+          ch = string.charAt(i);
+          callback({ validChars: ch });
         }
       },
 
@@ -29451,7 +29451,7 @@ define("route-recognizer",
       },
 
       // Find a list of child states matching the next character
-      match: function(char) {
+      match: function(ch) {
         // DEBUG "Processing `" + char + "`:"
         var nextStates = this.nextStates,
             child, charSpec, chars;
@@ -29465,9 +29465,9 @@ define("route-recognizer",
           charSpec = child.charSpec;
 
           if (typeof (chars = charSpec.validChars) !== 'undefined') {
-            if (chars.indexOf(char) !== -1) { returned.push(child); }
+            if (chars.indexOf(ch) !== -1) { returned.push(child); }
           } else if (typeof (chars = charSpec.invalidChars) !== 'undefined') {
-            if (chars.indexOf(char) === -1) { returned.push(child); }
+            if (chars.indexOf(ch) === -1) { returned.push(child); }
           }
         }
 
@@ -29516,13 +29516,13 @@ define("route-recognizer",
       });
     }
 
-    function recognizeChar(states, char) {
+    function recognizeChar(states, ch) {
       var nextStates = [];
 
       for (var i=0, l=states.length; i<l; i++) {
         var state = states[i];
 
-        nextStates = nextStates.concat(state.match(char));
+        nextStates = nextStates.concat(state.match(ch));
       }
 
       return nextStates;
@@ -29559,10 +29559,10 @@ define("route-recognizer",
     }
 
     function addSegment(currentState, segment) {
-      segment.eachChar(function(char) {
+      segment.eachChar(function(ch) {
         var state;
 
-        currentState = currentState.put(char);
+        currentState = currentState.put(ch);
       });
 
       return currentState;
