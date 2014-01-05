@@ -12,13 +12,13 @@ addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.2.0-SNAPSHOT")
 
 You may need to add a reference to the Sonatype repository
 ```
-resolvers += "Sonatype releases" at "http://oss.sonatype.org/service/local/staging/deploy/maven2"
+resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 ```
 
 * play 2.1.x:
 
 ```
-addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.0.0")
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.2.0-SNAPSHOT")
 ``` 
 
 to your plugin.sbt
@@ -43,6 +43,24 @@ to your plugin.sbt
     )
 
   }
+```
+
+* Or if you prefer using build.sbt:
+
+```
+name := "<My app name>"
+
+version := "1.0-SNAPSHOT"
+
+libraryDependencies ++= Seq(
+  jdbc,
+  anorm,
+  cache
+)
+
+emberJsVersion := "1.2.0"
+
+play.Project.playScalaSettings
 ```
 
 * Include ember.js and the corresponding jQuery and handlebars files. Note that they are not provided by the sbt plugin. Check the ember site for them: [ember.js](https://ember.js) 
