@@ -12,13 +12,19 @@ addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.2.0-SNAPSHOT")
 
 You may need to add a reference to the Sonatype repository
 ```
+resolvers += "Sonatype snapshots" at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+```
+
+Or for snapshots
+
+```
 resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 ```
 
 * play 2.1.x:
 
 ```
-addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.2.0-SNAPSHOT")
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.2.0")
 ``` 
 
 to your plugin.sbt
