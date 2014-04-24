@@ -4785,7 +4785,7 @@ ComputedPropertyPrototype.cacheable = function(aFlag) {
   @return {Ember.ComputedProperty} this
   @chainable
 */
-ComputedPropertyPrototype._volatile = function() {
+ComputedPropertyPrototype.volatile = function() {
   return this.cacheable(false);
 };
 
@@ -21559,11 +21559,11 @@ var ClassSet = function() {
 };
 
 ClassSet.prototype = {
-  add: function(str) {
-    if (str in this.seen) { return; }
-    this.seen[str] = true;
+  add: function(string) {
+    if (string in this.seen) { return; }
+    this.seen[string] = true;
 
-    this.list.push(str);
+    this.list.push(string);
   },
 
   toDOM: function() {
@@ -21604,10 +21604,10 @@ function escapeAttribute(value) {
     return escape[chr] || "&amp;";
   };
 
-  var str = value.toString();
+  var string = value.toString();
 
-  if(!POSSIBLE_CHARS_REGEXP.test(str)) { return str; }
-  return str.replace(BAD_CHARS_REGEXP, escapeChar);
+  if(!POSSIBLE_CHARS_REGEXP.test(string)) { return string; }
+  return string.replace(BAD_CHARS_REGEXP, escapeChar);
 }
 
 // IE 6/7 have bugs around setting names on inputs during creation.
@@ -21766,8 +21766,8 @@ Ember._RenderBuffer.prototype = {
     @param {String} string HTML to push into the buffer
     @chainable
   */
-  push: function(str) {
-    this.buffer += str;
+  push: function(string) {
+    this.buffer += string;
     return this;
   },
 
@@ -23317,7 +23317,7 @@ Ember.View = Ember.CoreView.extend({
     } else {
       return get(this, '_context');
     }
-  })._volatile(),
+  }).volatile(),
 
   /**
     Private copy of the view's template context. This can be set directly
@@ -25481,7 +25481,7 @@ Ember.ContainerView = Ember.View.extend(Ember.MutableArray, {
 
   length: Ember.computed(function () {
     return this._childViews.length;
-  })._volatile(),
+  }).volatile(),
 
   /**
     Instructs each child view to render to the passed render buffer.
@@ -27190,8 +27190,8 @@ Ember.Handlebars.JavaScriptCompiler.prototype.initializeBuffer = function() {
   @method appendToBuffer
   @param string {String}
 */
-Ember.Handlebars.JavaScriptCompiler.prototype.appendToBuffer = function(str) {
-  return "data.buffer.push("+str+");";
+Ember.Handlebars.JavaScriptCompiler.prototype.appendToBuffer = function(string) {
+  return "data.buffer.push("+string+");";
 };
 
 // Hacks ahead:
@@ -27267,8 +27267,8 @@ Ember.Handlebars.Compiler.prototype.mustache = function(mustache) {
   @static
   @param {String} string The template to precompile
 */
-Ember.Handlebars.precompile = function(str) {
-  var ast = Handlebars.parse(str);
+Ember.Handlebars.precompile = function(string) {
+  var ast = Handlebars.parse(string);
 
   var options = {
     knownHelpers: {
@@ -27300,8 +27300,8 @@ if (Handlebars.compile) {
     @param {String} string The template to compile
     @return {Function}
   */
-  Ember.Handlebars.compile = function(str) {
-    var ast = Handlebars.parse(str);
+  Ember.Handlebars.compile = function(string) {
+    var ast = Handlebars.parse(string);
     var options = { data: true, stringParams: true };
     var environment = new Ember.Handlebars.Compiler().compile(ast, options);
     var templateSpec = new Ember.Handlebars.JavaScriptCompiler().compile(environment, options, undefined, true);
@@ -28101,13 +28101,13 @@ SimpleHandlebarsView.prototype = {
   },
 
   renderToBuffer: function(buffer) {
-    var str = '';
+    var string = '';
 
-    str += this.morph.startTag();
-    str += this.render();
-    str += this.morph.endTag();
+    string += this.morph.startTag();
+    string += this.render();
+    string += this.morph.endTag();
 
-    buffer.push(str);
+    buffer.push(string);
   },
 
   render: function() {
@@ -32278,23 +32278,23 @@ define("route-recognizer",
     // * `invalidChars`: a String with a list of all invalid characters
     // * `repeat`: true if the character specification can repeat
 
-    function StaticSegment(str) { this.str = str; }
+    function StaticSegment(string) { this.string = string; }
     StaticSegment.prototype = {
       eachChar: function(callback) {
-        var str = this.str, ch;
+        var string = this.string, ch;
 
-        for (var i=0, l=str.length; i<l; i++) {
-          ch = str.charAt(i);
+        for (var i=0, l=string.length; i<l; i++) {
+          ch = string.charAt(i);
           callback({ validChars: ch });
         }
       },
 
       regex: function() {
-        return this.str.replace(escapeRegex, '\\$1');
+        return this.string.replace(escapeRegex, '\\$1');
       },
 
       generate: function() {
-        return this.str;
+        return this.string;
       }
     };
 
