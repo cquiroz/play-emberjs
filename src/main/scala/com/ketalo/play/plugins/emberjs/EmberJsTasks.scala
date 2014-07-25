@@ -2,6 +2,7 @@ package com.ketalo.play.plugins.emberjs
 
 import java.io._
 import org.apache.commons.io.FilenameUtils
+import play.JvmLogger
 
 import sbt._
 import play.PlayExceptions.AssetCompilationException
@@ -88,7 +89,9 @@ trait EmberJsTasks extends EmberJsKeys {
       val cacheFile = cache / "emberjs"
       val templatesDir = resources / "public" / "templates"
       val global = templatesDir / templateFile
-      val globalMinified = templatesDir / (FilenameUtils.removeExtension(templateFile) + ".min.js")
+      val globalMinified = templatesDir / s"${FilenameUtils.removeExtension(templateFile)}.min.js"
+
+      val logger = new JvmLogger(Some("EmberJs"))
 
       def naming(name: String) = name.replaceAll(fileReplaceRegexp, fileReplaceWith)
 
@@ -107,9 +110,10 @@ trait EmberJsTasks extends EmberJsKeys {
                  """
 
         val generated:Seq[(File, File)] = (files x relativeTo(assetsDir)).flatMap {
-          case (sourceFile, name) => {
+          case (sourceFile, name) =>
             val template = templateName(sourceFile.getPath, assetsDir.getPath)
             val jsSource = if (modificationTimeCache.get(sourceFile.getAbsolutePath).map(time => time != sourceFile.lastModified()).getOrElse(true)) {
+              logger.info(s"Compiling $sourceFile not in cache")
               compile(version, template, IO.read(sourceFile)).left.map {
                 case (msg, line, column) => throw AssetCompilationException(Some(sourceFile),
                   msg,
@@ -117,6 +121,7 @@ trait EmberJsTasks extends EmberJsKeys {
                   Some(column))
               }.right.get
             } else {
+              logger.info(s"Reading $name from the cache")
               IO.read(new File(resources, "public/templates/" + naming(name)))
             }
             modificationTimeCache += (sourceFile.getAbsolutePath -> sourceFile.lastModified)
@@ -126,7 +131,6 @@ trait EmberJsTasks extends EmberJsKeys {
             val out = new File(resources, "public/templates/" + naming(name))
             IO.write(out, jsSource)
             Seq(sourceFile -> out)
-          }
         }
 
         output ++= "})();\n"
