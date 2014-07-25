@@ -7,12 +7,12 @@ import org.apache.commons.io.FilenameUtils
 object EmberJsPlugin extends Plugin with EmberJsTasks {
 
   val emberJsSettings = Seq(
-    emberJsAssetsDir <<= (sourceDirectory in Compile)(src => (src / "assets" / "templates")),
+    emberJsAssetsDir <<= (sourceDirectory in Compile)(src => src / "assets" / "templates"),
     emberJsFileEnding := ".handlebars",
     emberJsTemplateFile := "templates.pre.js",
-    emberJsAssetsGlob <<= (emberJsAssetsDir)(assetsDir =>  (assetsDir ** "*.handlebars")),
-    emberJsFileRegexFrom <<= (emberJsFileEnding)(fileEnding => fileEnding),
-    emberJsFileRegexTo <<= (emberJsFileEnding)(fileEnding => FilenameUtils.removeExtension(fileEnding) + ".js"),
+    emberJsAssetsGlob <<= emberJsAssetsDir(assetsDir => assetsDir ** "*.handlebars"),
+    emberJsFileRegexFrom <<= emberJsFileEnding(fileEnding => fileEnding),
+    emberJsFileRegexTo <<= emberJsFileEnding(fileEnding => s"${FilenameUtils.removeExtension(fileEnding)}.js"),
     resourceGenerators in Compile <+= EmberJsCompiler
   )
 

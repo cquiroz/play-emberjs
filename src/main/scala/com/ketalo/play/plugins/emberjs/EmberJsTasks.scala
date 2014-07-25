@@ -36,7 +36,7 @@ trait EmberJsTasks extends EmberJsKeys {
     import org.mozilla.javascript._
     import org.mozilla.javascript.tools.shell._
 
-    val (ember, handlebars, headless) = versions.get(version).getOrElse(("", "", ""))
+    val (ember, handlebars, headless) = versions.getOrElse(version, ("", "", ""))
     val ctx = Context.enter
     ctx.setLanguageVersion(org.mozilla.javascript.Context.VERSION_1_7)
     ctx.setOptimizationLevel(-1) // Needed to get around a 64K limit
@@ -47,7 +47,7 @@ trait EmberJsTasks extends EmberJsKeys {
 
     def loadScript(script: String) {
       // load handlebars
-      val scriptFile = loadResource(script + ".js").getOrElse(throw new Exception("script: could not find " + script))
+      val scriptFile = loadResource(s"$script.js").getOrElse(throw new Exception(s"Could not find $script"))
 
       try {
         ctx.evaluateReader(scope, scriptFile, script, 1, null)
@@ -121,7 +121,7 @@ trait EmberJsTasks extends EmberJsKeys {
             }
             modificationTimeCache += (sourceFile.getAbsolutePath -> sourceFile.lastModified)
 
-            output ++= "\ntemplates['%s'] = template(%s);\n\n".format(template, jsSource)
+            output ++= s"\ntemplates['$template'] = template($jsSource);\n\n"
 
             val out = new File(resources, "public/templates/" + naming(name))
             IO.write(out, jsSource)
@@ -130,7 +130,7 @@ trait EmberJsTasks extends EmberJsKeys {
         }
 
         output ++= "})();\n"
-        IO.write(global, output.toString)
+        IO.write(global, output.toString())
 
         // Minify
         val minified = play.core.jscompile.JavascriptCompiler.minify(output.toString, None)
