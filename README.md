@@ -7,7 +7,7 @@ This plugin provides build time compilation for [Ember.js](https://github.com/em
 * play 2.2.x
 
 ```
-addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.5.1-SNAPSHOT")
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.5.1")
 ```
 
 You may need to add a reference to the Sonatype repository
@@ -24,7 +24,7 @@ resolvers += "Sonatype snapshots" at "https://oss.sonatype.org/content/repositor
 * play 2.1.x:
 
 ```
-addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.5.1-SNAPSHOT")
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.5.1")
 ``` 
 
 to your plugin.sbt
@@ -64,7 +64,7 @@ libraryDependencies ++= Seq(
   cache
 )
 
-emberJsVersion := "1.4.0"
+emberJsVersion := "1.5.1"
 
 play.Project.playScalaSettings
 ```
@@ -94,7 +94,7 @@ The generated templates.pre.js has the javascript code containing all the precom
 
 For an example, see the bundled sample app for three different ember versions
 
-* [ember 1.4.0](/sample-1.5.1)
+* [ember 1.5.1](/sample-1.5.1)
 * [ember 1.4.0](/sample-1.4.0)
 * [ember 1.3.0](/sample-1.3.0)
 * [ember 1.2.0](/sample-1.2.0)

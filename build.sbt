@@ -1,6 +1,6 @@
 name := "emberjs"
 
-version := "1.5.1-SNAPSHOT"
+version := "1.5.1"
 
 sbtPlugin := true
 
@@ -14,7 +14,7 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 
 libraryDependencies ++= Seq()
 
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.2.1")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.2.3")
 
 publishTo <<= version { v: String =>
   val nexus = "https://oss.sonatype.org/"
