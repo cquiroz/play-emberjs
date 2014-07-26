@@ -1468,7 +1468,7 @@ define("ember-metal/computed",
       @return {Ember.ComputedProperty} this
       @chainable
     */
-    ComputedPropertyPrototype.volatile = function() {
+    ComputedPropertyPrototype._volatile = function() {
       return this.cacheable(false);
     };
 
@@ -22972,11 +22972,11 @@ define("ember-views/system/render_buffer",
 
 
     ClassSet.prototype = {
-      add: function(string) {
-        if (string in this.seen) { return; }
-        this.seen[string] = true;
+      add: function(str) {
+        if (str in this.seen) { return; }
+        this.seen[str] = true;
 
-        this.list.push(string);
+        this.list.push(str);
       },
 
       toDOM: function() {
@@ -23017,10 +23017,10 @@ define("ember-views/system/render_buffer",
         return escape[chr] || "&amp;";
       };
 
-      var string = value.toString();
+      var str = value.toString();
 
-      if(!POSSIBLE_CHARS_REGEXP.test(string)) { return string; }
-      return string.replace(BAD_CHARS_REGEXP, escapeChar);
+      if(!POSSIBLE_CHARS_REGEXP.test(str)) { return str; }
+      return str.replace(BAD_CHARS_REGEXP, escapeChar);
     }
 
     // IE 6/7 have bugs around setting names on inputs during creation.
@@ -23179,8 +23179,8 @@ define("ember-views/system/render_buffer",
         @param {String} string HTML to push into the buffer
         @chainable
       */
-      push: function(string) {
-        this.buffer += string;
+      push: function(str) {
+        this.buffer += str;
         return this;
       },
 
@@ -24650,7 +24650,7 @@ define("ember-views/views/container_view",
 
       length: computed(function () {
         return this._childViews.length;
-      }).volatile(),
+      })._volatile(),
 
       /**
         Instructs each child view to render to the passed render buffer.
@@ -26341,7 +26341,7 @@ define("ember-views/views/view",
         } else {
           return get(this, '_context');
         }
-      }).volatile(),
+      })._volatile(),
 
       /**
         Private copy of the view's template context. This can be set directly
@@ -28585,8 +28585,8 @@ define("ember-handlebars-compiler",
       @method appendToBuffer
       @param string {String}
     */
-    EmberHandlebars.JavaScriptCompiler.prototype.appendToBuffer = function(string) {
-      return "data.buffer.push("+string+");";
+    EmberHandlebars.JavaScriptCompiler.prototype.appendToBuffer = function(str) {
+      return "data.buffer.push("+str+");";
     };
 
     // Hacks ahead:
@@ -28665,8 +28665,8 @@ define("ember-handlebars-compiler",
       @param {Boolean} asObject optional parameter, defaulting to true, of whether or not the
                                 compiled template should be returned as an Object or a String
     */
-    EmberHandlebars.precompile = function(string, asObject) {
-      var ast = Handlebars.parse(string);
+    EmberHandlebars.precompile = function(str, asObject) {
+      var ast = Handlebars.parse(str);
 
       var options = {
         knownHelpers: {
@@ -28700,8 +28700,8 @@ define("ember-handlebars-compiler",
         @param {String} string The template to compile
         @return {Function}
       */
-      EmberHandlebars.compile = function(string) {
-        var ast = Handlebars.parse(string);
+      EmberHandlebars.compile = function(str) {
+        var ast = Handlebars.parse(str);
         var options = { data: true, stringParams: true };
         var environment = new EmberHandlebars.Compiler().compile(ast, options);
         var templateSpec = new EmberHandlebars.JavaScriptCompiler().compile(environment, options, undefined, true);
@@ -33772,13 +33772,13 @@ define("ember-handlebars/views/handlebars_bound_view",
       },
 
       renderToBuffer: function(buffer) {
-        var string = '';
+        var str = '';
 
-        string += this.morph.startTag();
-        string += this.render();
-        string += this.morph.endTag();
+        str += this.morph.startTag();
+        str += this.render();
+        str += this.morph.endTag();
 
-        buffer.push(string);
+        buffer.push(str);
       },
 
       render: function() {
@@ -39741,23 +39741,23 @@ define("route-recognizer",
     // * `invalidChars`: a String with a list of all invalid characters
     // * `repeat`: true if the character specification can repeat
 
-    function StaticSegment(string) { this.string = string; }
+    function StaticSegment(str) { this.str = str; }
     StaticSegment.prototype = {
       eachChar: function(callback) {
-        var string = this.string, ch;
+        var str = this.str, ch;
 
-        for (var i=0, l=string.length; i<l; i++) {
-          ch = string.charAt(i);
+        for (var i=0, l=str.length; i<l; i++) {
+          ch = str.charAt(i);
           callback({ validChars: ch });
         }
       },
 
       regex: function() {
-        return this.string.replace(escapeRegex, '\\$1');
+        return this.str.replace(escapeRegex, '\\$1');
       },
 
       generate: function() {
-        return this.string;
+        return this.str;
       }
     };
 

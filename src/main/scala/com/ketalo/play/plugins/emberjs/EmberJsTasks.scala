@@ -8,6 +8,8 @@ import sbt._
 import play.PlayExceptions.AssetCompilationException
 
 trait EmberJsTasks extends EmberJsKeys {
+  val logger = new JvmLogger(Some("play-emberjs"))
+
   val modificationTimeCache = scala.collection.mutable.Map.empty[String, Long] // Keeps track of the modification time
 
   val versions = Map(
@@ -33,7 +35,7 @@ trait EmberJsTasks extends EmberJsKeys {
   }
 
   def compile(version:String, name: String, source: String): Either[(String, Int, Int), String] = {
-    println(s"Compile handlebars template: $name with ember version $version")
+    logger.info(s"Compile handlebars template: $name with ember version $version")
 
     import org.mozilla.javascript._
     import org.mozilla.javascript.tools.shell._
@@ -91,8 +93,6 @@ trait EmberJsTasks extends EmberJsKeys {
       val templatesDir = resources / "public" / "templates"
       val global = templatesDir / templateFile
       val globalMinified = templatesDir / s"${FilenameUtils.removeExtension(templateFile)}.min.js"
-
-      val logger = new JvmLogger(Some("EmberJs"))
 
       def naming(name: String) = name.replaceAll(fileReplaceRegexp, fileReplaceWith)
 
