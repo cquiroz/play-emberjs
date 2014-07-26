@@ -1,6 +1,6 @@
 name := "emberjs"
 
-version := "1.5.1"
+version := "1.6.1-SNAPSHOT"
 
 sbtPlugin := true
 
