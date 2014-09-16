@@ -7,7 +7,7 @@ This plugin provides build time compilation for [Ember.js](https://github.com/em
 * play 2.2.x
 
 ```
-addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.6.1")
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.7.0-SNAPSHOT")
 ```
 
 You may need to add a reference to the Sonatype repository
@@ -24,14 +24,14 @@ resolvers += "Sonatype snapshots" at "https://oss.sonatype.org/content/repositor
 * play 2.1.x:
 
 ```
-addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.6.1")
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.7.0-SNAPSHOT")
 ``` 
 
 to your plugin.sbt
 
 # How to Use
 
-* Select your ember version in your Build.scala. Currently supported versions include 1.6.1, 1.5.1, 1.4.0, 1.3.0, 1.2.0, 1.1.2, 1.0.0, 1.0.0-rc.8, 1.0.0-rc.7, 1.0.0-rc.6, 1.0.0-rc.5, 1.0.0-rc.4, 1.0.0-rc.3, 1.0.0-rc.1 and 1.0.0-pre.2
+* Select your ember version in your Build.scala. Currently supported versions include 1.7.0, 1.5.1, 1.4.0, 1.3.0, 1.2.0, 1.1.2, 1.0.0, 1.0.0-rc.8, 1.0.0-rc.7, 1.0.0-rc.6, 1.0.0-rc.5, 1.0.0-rc.4, 1.0.0-rc.3, 1.0.0-rc.1 and 1.0.0-pre.2
 
 ```scala
   import com.ketalo.play.plugins.emberjs.EmberJsKeys
@@ -45,7 +45,7 @@ to your plugin.sbt
     val appDependencies = Seq.empty
 
     val main = play.Project(appName, appVersion, appDependencies).settings(
-      emberJsVersion := "1.6.1"
+      emberJsVersion := "1.7.0"
     )
 
   }
@@ -94,6 +94,7 @@ The generated templates.pre.js has the javascript code containing all the precom
 
 For an example, see the bundled sample app for three different ember versions
 
+* [ember 1.7.0](/sample-1.7.0)
 * [ember 1.6.1](/sample-1.6.1)
 * [ember 1.5.1](/sample-1.5.1)
 * [ember 1.4.0](/sample-1.4.0)
@@ -139,6 +140,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 # Changelog
 
+* version 1.7.0 Supports ember.js 1.7.0
 * version 1.6.1 Supports ember.js 1.6.1
 * version 1.5.1 Supports ember.js 1.5.1
 * version 1.4.0 Supports ember.js 1.4.0

@@ -27,7 +27,8 @@ trait EmberJsTasks extends EmberJsKeys {
     "1.3.0"       -> (("ember-1.3.0.for-rhino", "handlebars-v1.2.1", "headless-ember-1.1.2")),
     "1.4.0"       -> (("ember-1.4.0.for-rhino", "handlebars-v1.3.0", "headless-ember-1.1.2")),
     "1.5.1"       -> (("ember-1.5.1.for-rhino", "handlebars-v1.3.0", "headless-ember-1.1.2")),
-    "1.6.1"       -> (("ember-1.6.1.for-rhino", "handlebars-v1.3.0", "headless-ember-1.1.2"))
+    "1.6.1"       -> (("ember-1.6.1.for-rhino", "handlebars-v1.3.0", "headless-ember-1.1.2")),
+    "1.7.0"       -> (("ember-1.7.0.for-rhino", "handlebars-v1.3.0", "headless-ember-1.1.2"))
   )
 
   private def loadResource(name: String): Option[Reader] = {
