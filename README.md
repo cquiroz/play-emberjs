@@ -7,7 +7,7 @@ This plugin provides build time compilation for [Ember.js](https://github.com/em
 * play 2.2.x
 
 ```
-addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.7.0-SNAPSHOT")
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.7.0")
 ```
 
 You may need to add a reference to the Sonatype repository
@@ -24,7 +24,7 @@ resolvers += "Sonatype snapshots" at "https://oss.sonatype.org/content/repositor
 * play 2.1.x:
 
 ```
-addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.7.0-SNAPSHOT")
+addSbtPlugin("com.ketalo.play.plugins" % "emberjs" % "1.7.0")
 ``` 
 
 to your plugin.sbt
@@ -64,7 +64,7 @@ libraryDependencies ++= Seq(
   cache
 )
 
-emberJsVersion := "1.6.1"
+emberJsVersion := "1.7.0"
 
 play.Project.playScalaSettings
 ```
